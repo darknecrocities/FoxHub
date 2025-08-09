@@ -1,0 +1,410 @@
+{
+  "career_path": "Computer Science",
+  "specializations": [
+    {
+      "track": "Cloud Engineering",
+      "roadmap": [
+        {
+          "lesson_title": "Cloud Fundamentals",
+          "description": "Understand cloud computing basics, types of cloud services, and deployment models.",
+          "skills": [
+            "Cloud concepts",
+            "IaaS, PaaS, SaaS",
+            "Public, Private, Hybrid clouds"
+          ],
+          "certification_link": "https://aws.amazon.com/training/"
+        },
+        {
+          "lesson_title": "AWS Core Services",
+          "description": "Learn AWS core services like EC2, S3, Lambda, and IAM.",
+          "skills": [
+            "Compute and storage",
+            "Serverless functions",
+            "Access management"
+          ],
+          "certification_link": "https://aws.amazon.com/certification/certified-solutions-architect-associate/"
+        },
+        {
+          "lesson_title": "Infrastructure as Code",
+          "description": "Manage cloud infrastructure using code with tools like Terraform and CloudFormation.",
+          "skills": [
+            "Terraform basics",
+            "CloudFormation templates",
+            "Automation"
+          ],
+          "certification_link": "https://learn.hashicorp.com/terraform"
+        },
+        {
+          "lesson_title": "Containerization and Orchestration",
+          "description": "Understand Docker containers and orchestration using Kubernetes.",
+          "skills": [
+            "Docker containers",
+            "Kubernetes basics",
+            "Cluster management"
+          ],
+          "certification_link": "https://www.cncf.io/certification/cka/"
+        }
+      ]
+    },
+    {
+      "track": "Backend Development",
+      "roadmap": [
+        {
+          "lesson_title": "Programming Fundamentals",
+          "description": "Master backend programming basics using languages like Java, Python, or Node.js.",
+          "skills": [
+            "Language syntax",
+            "Control flow",
+            "Data structures"
+          ],
+          "certification_link": "https://www.codecademy.com/learn/learn-java"
+        },
+        {
+          "lesson_title": "Web Servers and APIs",
+          "description": "Learn to build RESTful APIs and work with web servers.",
+          "skills": [
+            "HTTP protocol",
+            "REST API design",
+            "Express.js, Flask"
+          ],
+          "certification_link": "https://www.udemy.com/course/rest-api-design/"
+        },
+        {
+          "lesson_title": "Databases",
+          "description": "Learn SQL and NoSQL databases and data modeling.",
+          "skills": [
+            "MySQL, PostgreSQL",
+            "MongoDB, Redis",
+            "Data schema design"
+          ],
+          "certification_link": "https://www.coursera.org/specializations/databases"
+        },
+        {
+          "lesson_title": "Authentication and Security",
+          "description": "Implement user authentication, authorization, and secure backend practices.",
+          "skills": [
+            "OAuth, JWT",
+            "Encryption",
+            "Secure coding"
+          ],
+          "certification_link": "https://www.pluralsight.com/courses/web-application-security-fundamentals"
+        }
+      ]
+    },
+    {
+      "track": "Data Science & Machine Learning",
+      "roadmap": [
+        {
+          "lesson_title": "Data Analysis with Python",
+          "description": "Explore data manipulation and visualization using libraries like Pandas and Matplotlib.",
+          "skills": [
+            "Pandas",
+            "Data cleaning",
+            "Visualization"
+          ],
+          "certification_link": "https://www.datacamp.com/courses/data-manipulation-with-pandas"
+        },
+        {
+          "lesson_title": "Machine Learning Basics",
+          "description": "Understand supervised and unsupervised learning algorithms.",
+          "skills": [
+            "Regression",
+            "Classification",
+            "Clustering"
+          ],
+          "certification_link": "https://www.coursera.org/learn/machine-learning"
+        },
+        {
+          "lesson_title": "Deep Learning",
+          "description": "Learn about neural networks, CNNs, and RNNs.",
+          "skills": [
+            "Neural networks",
+            "TensorFlow or PyTorch",
+            "Model evaluation"
+          ],
+          "certification_link": "https://www.deeplearning.ai/deep-learning-specialization/"
+        },
+        {
+          "lesson_title": "Big Data & Cloud for Data Science",
+          "description": "Use big data tools and cloud platforms to manage and analyze large datasets.",
+          "skills": [
+            "Hadoop, Spark",
+            "AWS S3 and EC2",
+            "Data pipelines"
+          ],
+          "certification_link": "https://aws.amazon.com/training/"
+        }
+      ]
+    },
+    {
+      "track": "Cybersecurity",
+      "roadmap": [
+        {
+          "lesson_title": "Introduction to Cybersecurity",
+          "description": "Learn the fundamentals of security principles, threats, and vulnerabilities.",
+          "skills": [
+            "Security basics",
+            "Types of attacks",
+            "Risk management"
+          ],
+          "certification_link": "https://www.cybrary.it/course/introduction-to-it-and-cybersecurity/"
+        },
+        {
+          "lesson_title": "Network Security",
+          "description": "Understand firewalls, VPNs, and secure network protocols.",
+          "skills": [
+            "Firewalls",
+            "VPNs",
+            "TLS/SSL"
+          ],
+          "certification_link": "https://www.coursera.org/learn/network-security"
+        },
+        {
+          "lesson_title": "Ethical Hacking",
+          "description": "Learn penetration testing and vulnerability assessment.",
+          "skills": [
+            "Penetration testing",
+            "Metasploit",
+            "Bug bounty"
+          ],
+          "certification_link": "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/"
+        },
+        {
+          "lesson_title": "Security Operations",
+          "description": "Work with security monitoring and incident response.",
+          "skills": [
+            "SIEM",
+            "Incident response",
+            "Forensics"
+          ],
+          "certification_link": "https://www.sans.org/cyber-security-courses/security-operations-center/"
+        }
+      ]
+    },
+    {
+      "track": "Frontend Development",
+      "roadmap": [
+        {
+          "lesson_title": "HTML, CSS & JavaScript Basics",
+          "description": "Learn how to build responsive and interactive user interfaces.",
+          "skills": [
+            "HTML5",
+            "CSS3",
+            "JavaScript fundamentals"
+          ],
+          "certification_link": "https://www.freecodecamp.org/learn"
+        }
+      ]
+    },
+    {
+      "track": "Mobile Development",
+      "roadmap": [
+        {
+          "lesson_title": "Mobile App Development Basics",
+          "description": "Build native apps for Android and iOS using modern frameworks.",
+          "skills": [
+            "Kotlin/Java for Android",
+            "Swift for iOS",
+            "React Native or Flutter"
+          ],
+          "certification_link": "https://www.udacity.com/course/android-basics-nanodegree-by-google--nd803"
+        }
+      ]
+    },
+    {
+      "track": "DevOps Engineering",
+      "roadmap": [
+        {
+          "lesson_title": "Introduction to DevOps",
+          "description": "Understand CI/CD pipelines and infrastructure automation.",
+          "skills": [
+            "Jenkins",
+            "Docker",
+            "Kubernetes"
+          ],
+          "certification_link": "https://www.edx.org/professional-certificate/linuxfoundationx-devops"
+        }
+      ]
+    },
+    {
+      "track": "Game Development",
+      "roadmap": [
+        {
+          "lesson_title": "Game Design and Programming",
+          "description": "Learn core game development concepts and tools.",
+          "skills": [
+            "Unity or Unreal Engine",
+            "C# or C++",
+            "Game physics"
+          ],
+          "certification_link": "https://learn.unity.com/course/create-with-code"
+        }
+      ]
+    },
+    {
+      "track": "Artificial Intelligence",
+      "roadmap": [
+        {
+          "lesson_title": "AI Fundamentals",
+          "description": "Explore AI concepts including reasoning, planning, and perception.",
+          "skills": [
+            "Search algorithms",
+            "Knowledge representation",
+            "Natural language processing basics"
+          ],
+          "certification_link": "https://www.coursera.org/learn/artificial-intelligence"
+        }
+      ]
+    },
+    {
+      "track": "Software Testing & QA",
+      "roadmap": [
+        {
+          "lesson_title": "Software Testing Fundamentals",
+          "description": "Learn different types of testing such as unit, integration, and system testing.",
+          "skills": [
+            "Test case design",
+            "Automation testing",
+            "Selenium"
+          ],
+          "certification_link": "https://www.udemy.com/course/software-testing-qa/"
+        }
+      ]
+    },
+    {
+      "track": "Embedded Systems",
+      "roadmap": [
+        {
+          "lesson_title": "Introduction to Embedded Systems",
+          "description": "Understand microcontrollers, real-time operating systems, and hardware interfacing.",
+          "skills": [
+            "Microcontroller programming",
+            "C/C++",
+            "RTOS basics"
+          ],
+          "certification_link": "https://www.coursera.org/learn/embedded-systems"
+        }
+      ]
+    },
+    {
+      "track": "Blockchain Development",
+      "roadmap": [
+        {
+          "lesson_title": "Blockchain Basics",
+          "description": "Learn the fundamentals of blockchain technology and decentralized applications.",
+          "skills": [
+            "Cryptography",
+            "Smart contracts",
+            "Ethereum and Solidity"
+          ],
+          "certification_link": "https://www.coursera.org/specializations/blockchain"
+        }
+      ]
+    },
+    {
+      "track": "Internet of Things (IoT)",
+      "roadmap": [
+        {
+          "lesson_title": "IoT Fundamentals",
+          "description": "Explore IoT architecture, sensors, and communication protocols.",
+          "skills": [
+            "IoT protocols (MQTT, CoAP)",
+            "Sensor interfacing",
+            "Cloud integration"
+          ],
+          "certification_link": "https://www.edx.org/course/internet-of-things-iot"
+        }
+      ]
+    },
+    {
+      "track": "Computer Vision",
+      "roadmap": [
+        {
+          "lesson_title": "Introduction to Computer Vision",
+          "description": "Understand image processing and object detection techniques.",
+          "skills": [
+            "OpenCV",
+            "Image classification",
+            "Convolutional Neural Networks"
+          ],
+          "certification_link": "https://www.udacity.com/course/introduction-to-computer-vision--ud810"
+        }
+      ]
+    },
+    {
+      "track": "Natural Language Processing (NLP)",
+      "roadmap": [
+        {
+          "lesson_title": "NLP Fundamentals",
+          "description": "Learn text preprocessing, sentiment analysis, and language modeling.",
+          "skills": [
+            "Tokenization",
+            "TF-IDF, Word embeddings",
+            "Transformer models"
+          ],
+          "certification_link": "https://www.coursera.org/learn/language-processing"
+        }
+      ]
+    },
+    {
+      "track": "Augmented Reality (AR) & Virtual Reality (VR)",
+      "roadmap": [
+        {
+          "lesson_title": "AR/VR Basics",
+          "description": "Learn the fundamentals of immersive technologies and 3D environment development.",
+          "skills": [
+            "Unity3D",
+            "3D modeling",
+            "ARKit and ARCore"
+          ],
+          "certification_link": "https://www.coursera.org/specializations/ar-vr"
+        }
+      ]
+    },
+    {
+      "track": "Robotics",
+      "roadmap": [
+        {
+          "lesson_title": "Robotics Fundamentals",
+          "description": "Explore robot kinematics, sensors, and programming robots.",
+          "skills": [
+            "ROS (Robot Operating System)",
+            "Sensor integration",
+            "Path planning"
+          ],
+          "certification_link": "https://www.edx.org/course/robotics"
+        }
+      ]
+    },
+    {
+      "track": "Quantum Computing",
+      "roadmap": [
+        {
+          "lesson_title": "Quantum Computing Basics",
+          "description": "Understand qubits, superposition, and quantum algorithms.",
+          "skills": [
+            "Quantum gates",
+            "Qiskit",
+            "Quantum algorithms"
+          ],
+          "certification_link": "https://quantum-computing.ibm.com/docs/education"
+        }
+      ]
+    },
+    {
+      "track": "Computer Graphics",
+      "roadmap": [
+        {
+          "lesson_title": "Computer Graphics Fundamentals",
+          "description": "Learn about rendering, shading, and graphics programming.",
+          "skills": [
+            "OpenGL",
+            "Shader programming",
+            "3D modeling"
+          ],
+          "certification_link": "https://www.coursera.org/learn/computer-graphics"
+        }
+      ]
+    }
+  ]
+}
