@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:foxhub/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // <--- added
+
 import '../screens/home_screen.dart';
-import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,19 +14,57 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final TextEditingController email = TextEditingController();
   final TextEditingController pass = TextEditingController();
   late AnimationController _controller;
   late Animation<double> _fadeIn;
 
+  bool rememberMe = false; // <--- added
+
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
     _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+
+    _loadSavedCredentials(); // <--- added
+  }
+
+  // Load saved email, pass, rememberMe flag
+  void _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedEmail = prefs.getString('email') ?? '';
+    final savedPass = prefs.getString('password') ?? '';
+    final savedRemember = prefs.getBool('rememberMe') ?? false;
+
+    if (savedRemember) {
+      setState(() {
+        email.text = savedEmail;
+        pass.text = savedPass;
+        rememberMe = true;
+      });
+    }
+  }
+
+  // Save or clear credentials based on rememberMe
+  Future<void> _saveCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (rememberMe) {
+      await prefs.setString('email', email.text.trim());
+      await prefs.setString('password', pass.text.trim());
+      await prefs.setBool('rememberMe', true);
+    } else {
+      await prefs.remove('email');
+      await prefs.remove('password');
+      await prefs.setBool('rememberMe', false);
+    }
   }
 
   @override
@@ -37,11 +77,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   // Helper widget to build each pixel block for fox icon
   Widget pixelBlock(Color color, {double size = 12}) {
-    return Container(
-      width: size,
-      height: size,
-      color: color,
-    );
+    return Container(width: size, height: size, color: color);
   }
 
   // Fox pixel icon as a widget using Rows and Columns
@@ -222,7 +258,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 // Login card with rounded corners and shadow
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 30),
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 30,
+                    horizontal: 25,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
@@ -252,8 +291,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         controller: email,
                         decoration: InputDecoration(
                           hintText: "Email Address",
-                          prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                          prefixIcon: const Icon(
+                            Icons.email_outlined,
+                            color: Colors.grey,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 20,
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -275,8 +320,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: "Password",
-                          prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: Colors.grey,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 18,
+                            horizontal: 20,
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -289,20 +340,52 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           filled: true,
                         ),
                       ),
-                      const SizedBox(height: 28),
+
+                      const SizedBox(height: 12),
+
+                      // Remember Me checkbox <---- ADDED
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: rememberMe,
+                            onChanged: (val) {
+                              setState(() {
+                                rememberMe = val ?? false;
+                              });
+                            },
+                            activeColor: orange,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text("Remember Me"),
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
 
                       // Big rounded orange login button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            final success = await Provider.of<AuthProvider>(context, listen: false)
-                                .login(email.text.trim(), pass.text.trim());
+                            final success = await Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            ).login(email.text.trim(), pass.text.trim());
                             if (success) {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+                              await _saveCredentials(); // <--- ADDED
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const HomeScreen(),
+                                ),
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Login failed. Please check your credentials.")),
+                                const SnackBar(
+                                  content: Text(
+                                    "Login failed. Please check your credentials.",
+                                  ),
+                                ),
                               );
                             }
                           },
@@ -317,7 +400,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           ),
                           child: const Text(
                             "Login",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -330,7 +416,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         children: [
                           TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ForgotPasswordScreen(),
+                                ),
+                              );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.grey[800],
@@ -345,7 +436,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (_) => const SignUpScreen()));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const SignUpScreen(),
+                                ),
+                              );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: orange,
@@ -355,7 +451,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             ),
                             child: const Text(
                               "No account? Sign up",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ],
