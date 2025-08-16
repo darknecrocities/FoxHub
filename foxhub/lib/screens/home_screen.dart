@@ -12,6 +12,8 @@ import 'package:foxhub/widgets/customize_appbar.dart';
 import 'package:foxhub/widgets/customize_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:foxhub/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +21,68 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+class RoadmapDetailPage extends StatelessWidget {
+  final RoadmapEntry entry;
+
+  const RoadmapDetailPage({super.key, required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    final orange = Colors.orangeAccent.shade400;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(entry.title),
+        backgroundColor: orange,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MarkdownBody(
+              data: entry.description.isNotEmpty
+                  ? entry.description
+                  : "No description available.",
+              styleSheet: MarkdownStyleSheet(
+                p: const TextStyle(fontSize: 16),
+                strong: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: orange,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (entry.links.isNotEmpty) const Text("Links:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            ...entry.links.map(
+                  (link) => ListTile(
+                leading: Icon(
+                  link.type == "video"
+                      ? Icons.play_circle_fill
+                      : (link.type == "article" ? Icons.article : Icons.link),
+                  color: orange,
+                ),
+                title: Text(link.title),
+                onTap: () async {
+                  final url = Uri.parse(link.url);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Could not open link")),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class _HomeScreenState extends State<HomeScreen> {
   String firstName = "";
@@ -148,40 +212,62 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
 
             // Search Bar
+            // Replace your TextField with this:
             TextField(
               controller: _searchController,
-              onChanged: onSearchChanged,
+              textInputAction: TextInputAction.search,
+              onChanged: (value) {
+                onSearchChanged(value); // live search results
+              },
+              onSubmitted: (value) {
+                if (value.trim().isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => SearchScreen(keyword: value.trim()),
+                    ),
+                  );
+                }
+              },
               decoration: InputDecoration(
                 hintText: "Search roadmap, organization, internship...",
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 16,
-                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide(color: orange),
+                  borderSide: BorderSide(color: Colors.orangeAccent.shade400),
                 ),
               ),
             ),
 
+
             const SizedBox(height: 16),
 
             // Search Results List
-            if (searchResults.isNotEmpty)
-              ...searchResults.map(
-                (entry) => _buildSearchResultItem(context, entry),
+            // Live search suggestions
+            if (_searchController.text.isNotEmpty && searchResults.isNotEmpty)
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: searchResults.length,
+                  itemBuilder: (context, index) {
+                    final entry = searchResults[index];
+                    return _buildSearchSuggestionItem(context, entry);
+                  },
+                ),
               ),
+
 
             const SizedBox(height: 20),
 
@@ -268,20 +354,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSearchResultItem(BuildContext context, RoadmapEntry entry) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      child: ListTile(
-        title: Text(
-          entry.title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        onTap: () => _showEntryDetails(context, entry),
-      ),
+
+  Widget _buildSearchSuggestionItem(BuildContext context, RoadmapEntry entry) {
+    return ListTile(
+      title: Text(entry.title),
+      leading: const Icon(Icons.search, color: Colors.orange),
+      onTap: () {
+        // Navigate to SearchScreen with the tapped title as keyword
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SearchScreen(keyword: entry.title),
+          ),
+        );
+      },
     );
   }
+
+
 
   void _showEntryDetails(BuildContext context, RoadmapEntry entry) {
     showModalBottomSheet(
@@ -317,13 +407,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ...entry.links.map(
-                  (link) => ListTile(
+                      (link) => ListTile(
                     leading: Icon(
                       link.type == "video"
                           ? Icons.play_circle_fill
                           : (link.type == "article"
-                                ? Icons.article
-                                : Icons.link),
+                          ? Icons.article
+                          : Icons.link),
                       color: Colors.orange.shade600,
                     ),
                     title: Text(link.title),
@@ -348,11 +438,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFeatureButton(
-    BuildContext context,
-    IconData icon,
-    String title, {
-    VoidCallback? onTap,
-  }) {
+      BuildContext context,
+      IconData icon,
+      String title, {
+        VoidCallback? onTap,
+      }) {
     return GestureDetector(
       onTap: onTap ?? () {},
       child: InkWell(
@@ -452,6 +542,45 @@ class SearchService {
     'lib/data/roadmap-content/cyber-security.json',
     'lib/data/roadmap-content/data-analyst.json',
     'lib/data/roadmap-content/devops.json',
+    'lib/data/roadmap-content/devrel.json',
+    'lib/data/roadmap-content/docker.json',
+    'lib/data/roadmap-content/engineering-manager.json',
+    'lib/data/roadmap-content/flutter.json',
+    'lib/data/roadmap-content/frontend.json',
+    'lib/data/roadmap-content/full-stack.json',
+    'lib/data/roadmap-content/game-developer.json',
+    'lib/data/roadmap-content/git-github.json',
+    'lib/data/roadmap-content/golang.json',
+    'lib/data/roadmap-content/graphql.json',
+    'lib/data/roadmap-content/ios.json',
+    'lib/data/roadmap-content/java.json',
+    'lib/data/roadmap-content/javascript.json',
+    'lib/data/roadmap-content/kubernetes.json',
+    'lib/data/roadmap-content/linux.json',
+    'lib/data/roadmap-content/mlops.json',
+    'lib/data/roadmap-content/mongodb.json',
+    'lib/data/roadmap-content/nodejs.json',
+    'lib/data/roadmap-content/php.json',
+    'lib/data/roadmap-content/postgresql-dba.json',
+    'lib/data/roadmap-content/product-manager.sql',
+    'lib/data/roadmap-content/prompt-engineering.json',
+    'lib/data/roadmap-content/python.json',
+    'lib/data/roadmap-content/qa.json',
+    'lib/data/roadmap-content/react.json',
+    'lib/data/roadmap-content/react-native.json',
+    'lib/data/roadmap-content/redis.json',
+    'lib/data/roadmap-content/rust.json',
+    'lib/data/roadmap-content/server-side-game-developer.json',
+    'lib/data/roadmap-content/software-architect.json',
+    'lib/data/roadmap-content/software-design-architecture.json',
+    'lib/data/roadmap-content/spring-boot.json',
+    'lib/data/roadmap-content/sql.json',
+    'lib/data/roadmap-content/system-design.json',
+    'lib/data/roadmap-content/technical-writer.json',
+    'lib/data/roadmap-content/terraform.json',
+    'lib/data/roadmap-content/typescript.json',
+    'lib/data/roadmap-content/ux-design.json',
+    'lib/data/roadmap-content/vue.json'
     // Add more files if you have
   ];
 
