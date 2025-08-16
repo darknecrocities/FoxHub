@@ -1,19 +1,21 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:foxhub/screens/community.dart';
 import 'package:foxhub/screens/internship.dart';
 import 'package:foxhub/screens/organization.dart';
 import 'package:foxhub/screens/roadmap.dart';
+import 'package:foxhub/screens/search_screen.dart';
 import 'package:foxhub/widgets/customize_appbar.dart';
 import 'package:foxhub/widgets/customize_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:foxhub/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,10 +34,7 @@ class RoadmapDetailPage extends StatelessWidget {
     final orange = Colors.orangeAccent.shade400;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(entry.title),
-        backgroundColor: orange,
-      ),
+      appBar: AppBar(title: Text(entry.title), backgroundColor: orange),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -47,16 +46,17 @@ class RoadmapDetailPage extends StatelessWidget {
                   : "No description available.",
               styleSheet: MarkdownStyleSheet(
                 p: const TextStyle(fontSize: 16),
-                strong: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: orange,
-                ),
+                strong: TextStyle(fontWeight: FontWeight.bold, color: orange),
               ),
             ),
             const SizedBox(height: 20),
-            if (entry.links.isNotEmpty) const Text("Links:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            if (entry.links.isNotEmpty)
+              const Text(
+                "Links:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ...entry.links.map(
-                  (link) => ListTile(
+              (link) => ListTile(
                 leading: Icon(
                   link.type == "video"
                       ? Icons.play_circle_fill
@@ -82,7 +82,6 @@ class RoadmapDetailPage extends StatelessWidget {
     );
   }
 }
-
 
 class _HomeScreenState extends State<HomeScreen> {
   String firstName = "";
@@ -127,16 +126,23 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> onSearchChanged(String query) async {
-    if (query.trim().isEmpty) {
-      setState(() {
-        searchResults = [];
-      });
-      return;
-    }
-    final results = await SearchService.searchRoadmaps(query);
-    setState(() {
-      searchResults = results;
+  Timer? _debounce;
+
+  void onSearchChanged(String query) {
+    // Cancel previous timer if still active
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    // Start a new 500ms timer
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      if (query.trim().isEmpty) {
+        setState(() => searchResults = []);
+        return;
+      }
+
+      // Perform search (can be isolate-based for speed)
+      final results = await SearchService.searchRoadmaps(query);
+
+      setState(() => searchResults = results);
     });
   }
 
@@ -234,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 16,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide.none,
@@ -245,7 +254,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
 
             const SizedBox(height: 16),
 
@@ -267,7 +275,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-
 
             const SizedBox(height: 20),
 
@@ -354,7 +361,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildSearchSuggestionItem(BuildContext context, RoadmapEntry entry) {
     return ListTile(
       title: Text(entry.title),
@@ -363,15 +369,11 @@ class _HomeScreenState extends State<HomeScreen> {
         // Navigate to SearchScreen with the tapped title as keyword
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => SearchScreen(keyword: entry.title),
-          ),
+          MaterialPageRoute(builder: (_) => SearchScreen(keyword: entry.title)),
         );
       },
     );
   }
-
-
 
   void _showEntryDetails(BuildContext context, RoadmapEntry entry) {
     showModalBottomSheet(
@@ -407,13 +409,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ...entry.links.map(
-                      (link) => ListTile(
+                  (link) => ListTile(
                     leading: Icon(
                       link.type == "video"
                           ? Icons.play_circle_fill
                           : (link.type == "article"
-                          ? Icons.article
-                          : Icons.link),
+                                ? Icons.article
+                                : Icons.link),
                       color: Colors.orange.shade600,
                     ),
                     title: Text(link.title),
@@ -438,11 +440,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFeatureButton(
-      BuildContext context,
-      IconData icon,
-      String title, {
-        VoidCallback? onTap,
-      }) {
+    BuildContext context,
+    IconData icon,
+    String title, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap ?? () {},
       child: InkWell(
@@ -487,12 +489,28 @@ class RoadmapEntry {
   final String description;
   final List<LinkItem> links;
 
+  // Precomputed lowercase for search
+  late final String _lowerTitle;
+  late final List<String> _lowerLinkTitles;
+
   RoadmapEntry({
     required this.id,
     required this.title,
     required this.description,
     required this.links,
-  });
+  }) {
+    _lowerTitle = title.toLowerCase();
+    _lowerLinkTitles = links.map((l) => l.title.toLowerCase()).toList();
+  }
+
+  bool matches(String keyword) {
+    final lowerKeyword = keyword.toLowerCase();
+    if (_lowerTitle.contains(lowerKeyword)) return true;
+    for (final linkTitle in _lowerLinkTitles) {
+      if (linkTitle.contains(lowerKeyword)) return true;
+    }
+    return false;
+  }
 
   factory RoadmapEntry.fromMap(String id, Map<String, dynamic> map) {
     return RoadmapEntry(
@@ -525,62 +543,7 @@ class LinkItem {
 class SearchService {
   // List all your roadmap JSON files here:
   static List<String> jsonFiles = [
-    'lib/data/roadmap-content/ai-agents.json',
-    'lib/data/roadmap-content/ai-data-scientist.json',
-    'lib/data/roadmap-content/ai-engineer.json',
-    'lib/data/roadmap-content/ai-red-teaming.json',
-    'lib/data/roadmap-content/android.json',
-    'lib/data/roadmap-content/angular.json',
-    'lib/data/roadmap-content/api-design.json',
-    'lib/data/roadmap-content/aspnet-core.json',
-    'lib/data/roadmap-content/aws.json',
-    'lib/data/roadmap-content/backend.json',
-    'lib/data/roadmap-content/blockchain.json',
-    'lib/data/roadmap-content/cloudflare.json',
-    'lib/data/roadmap-content/computer-science.json',
-    'lib/data/roadmap-content/cpp.json',
-    'lib/data/roadmap-content/cyber-security.json',
-    'lib/data/roadmap-content/data-analyst.json',
-    'lib/data/roadmap-content/devops.json',
-    'lib/data/roadmap-content/devrel.json',
-    'lib/data/roadmap-content/docker.json',
-    'lib/data/roadmap-content/engineering-manager.json',
-    'lib/data/roadmap-content/flutter.json',
-    'lib/data/roadmap-content/frontend.json',
-    'lib/data/roadmap-content/full-stack.json',
-    'lib/data/roadmap-content/game-developer.json',
-    'lib/data/roadmap-content/git-github.json',
-    'lib/data/roadmap-content/golang.json',
-    'lib/data/roadmap-content/graphql.json',
-    'lib/data/roadmap-content/ios.json',
-    'lib/data/roadmap-content/java.json',
-    'lib/data/roadmap-content/javascript.json',
-    'lib/data/roadmap-content/kubernetes.json',
-    'lib/data/roadmap-content/linux.json',
-    'lib/data/roadmap-content/mlops.json',
-    'lib/data/roadmap-content/mongodb.json',
-    'lib/data/roadmap-content/nodejs.json',
-    'lib/data/roadmap-content/php.json',
-    'lib/data/roadmap-content/postgresql-dba.json',
-    'lib/data/roadmap-content/product-manager.sql',
-    'lib/data/roadmap-content/prompt-engineering.json',
-    'lib/data/roadmap-content/python.json',
-    'lib/data/roadmap-content/qa.json',
-    'lib/data/roadmap-content/react.json',
-    'lib/data/roadmap-content/react-native.json',
-    'lib/data/roadmap-content/redis.json',
-    'lib/data/roadmap-content/rust.json',
-    'lib/data/roadmap-content/server-side-game-developer.json',
-    'lib/data/roadmap-content/software-architect.json',
-    'lib/data/roadmap-content/software-design-architecture.json',
-    'lib/data/roadmap-content/spring-boot.json',
-    'lib/data/roadmap-content/sql.json',
-    'lib/data/roadmap-content/system-design.json',
-    'lib/data/roadmap-content/technical-writer.json',
-    'lib/data/roadmap-content/terraform.json',
-    'lib/data/roadmap-content/typescript.json',
-    'lib/data/roadmap-content/ux-design.json',
-    'lib/data/roadmap-content/vue.json'
+    'lib/data/search/search_data.json',
     // Add more files if you have
   ];
 
@@ -591,7 +554,10 @@ class SearchService {
     _allEntries.clear();
     for (var path in jsonFiles) {
       final jsonStr = await rootBundle.loadString(path);
-      final Map<String, dynamic> data = json.decode(jsonStr);
+
+      // Parse in background isolate
+      final Map<String, dynamic> data = await compute(parseJson, jsonStr);
+
       data.forEach((key, value) {
         final entry = RoadmapEntry.fromMap(key, value);
         _allEntries[key] = entry;
@@ -599,14 +565,41 @@ class SearchService {
     }
   }
 
+  // Helper for compute
+  static Map<String, dynamic> parseJson(String jsonStr) {
+    return json.decode(jsonStr) as Map<String, dynamic>;
+  }
+
+  static List<RoadmapEntry>? _entriesList;
+
   static Future<List<RoadmapEntry>> searchRoadmaps(String keyword) async {
     if (_allEntries.isEmpty) {
       await loadAllData();
     }
+
+    _entriesList ??= _allEntries.values.toList(); // only once
     final lowerKeyword = keyword.toLowerCase();
-    final results = _allEntries.values
-        .where((entry) => entry.title.toLowerCase().contains(lowerKeyword))
-        .toList();
+
+    final List<RoadmapEntry> results = [];
+
+    for (final entry in _entriesList!) {
+      // Priority: title match first
+      if (entry._lowerTitle.contains(lowerKeyword)) {
+        results.add(entry);
+      } else {
+        // Check links only if title didn't match
+        for (final linkTitle in entry._lowerLinkTitles) {
+          if (linkTitle.contains(lowerKeyword)) {
+            results.add(entry);
+            break; // No need to check other links
+          }
+        }
+      }
+
+      // Stop early if we already have 10 results
+      if (results.length >= 15) break;
+    }
+
     print('Search "$keyword" found ${results.length} results');
     return results;
   }
