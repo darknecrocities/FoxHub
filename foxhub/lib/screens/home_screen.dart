@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final orange = Colors.orangeAccent.shade400;
 
     return Scaffold(
-      appBar: const CustomizeAppBar(),
+      appBar: const CustomizeAppBar(title: ''),
       drawer: buildAppDrawer(context),
       body: Container(
         decoration: BoxDecoration(

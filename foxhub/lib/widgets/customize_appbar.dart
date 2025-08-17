@@ -3,7 +3,7 @@ import 'package:foxhub/screens/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomizeAppBar({super.key});
+  const CustomizeAppBar({super.key, required String title});
 
   @override
   Widget build(BuildContext context) {
