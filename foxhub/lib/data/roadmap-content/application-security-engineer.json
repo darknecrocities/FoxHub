@@ -1,0 +1,56 @@
+{
+  "_intro": {
+    "title": "Introduction",
+    "description": "Application Security Engineers ensure software applications are designed, developed, and deployed securely. They identify vulnerabilities, perform code reviews, and implement security measures throughout the software development lifecycle (SDLC).\n\nLearn more from the following resources:",
+    "links": [
+      {
+        "title": "Application Security Overview",
+        "url": "https://owasp.org/www-project-top-ten/",
+        "type": "article"
+      },
+      {
+        "title": "Introduction to AppSec",
+        "url": "https://www.youtube.com/watch?v=X45LOy6bq6c",
+        "type": "video"
+      }
+    ]
+  },
+  "_roles": {
+    "title": "Key Roles & Responsibilities",
+    "description": "Application Security Engineers are responsible for:\n- Conducting static and dynamic code analysis\n- Performing penetration tests on applications\n- Implementing secure coding practices\n- Collaborating with developers to fix vulnerabilities",
+    "links": [
+      {
+        "title": "Application Security Responsibilities",
+        "url": "https://www.sans.org/cyber-security-careers/application-security",
+        "type": "article"
+      }
+    ]
+  },
+  "_learning": {
+    "title": "Learning Path",
+    "description": "**Foundational Skills:**\n- Secure coding principles\n- Web application architecture\n- Common vulnerabilities (OWASP Top 10)\n\n**Advanced Skills:**\n- Penetration testing tools (Burp Suite, OWASP ZAP)\n- Secure SDLC implementation\n- Cloud and API security",
+    "links": [
+      {
+        "title": "OWASP Top 10 Explained",
+        "url": "https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2021/",
+        "type": "course"
+      },
+      {
+        "title": "Application Security Training",
+        "url": "https://www.coursera.org/specializations/application-security",
+        "type": "course"
+      }
+    ]
+  },
+  "_career-growth": {
+    "title": "Career Growth",
+    "description": "Application Security Engineers can advance to roles like Senior AppSec Engineer, Security Architect, or Security Consultant, focusing on securing enterprise software or cloud applications.",
+    "links": [
+      {
+        "title": "AppSec Career Path",
+        "url": "https://www.cyberseek.org/path.html",
+        "type": "article"
+      }
+    ]
+  }
+}

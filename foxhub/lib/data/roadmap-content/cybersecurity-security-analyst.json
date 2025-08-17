@@ -1,0 +1,71 @@
+{
+  "_intro001": {
+    "title": "Introduction",
+    "description": "A Security Analyst is responsible for monitoring, preventing, and responding to security threats in an organization. They analyze network traffic, identify vulnerabilities, implement security measures, and ensure compliance with security policies.\n\nLearn more from the following resources:",
+    "links": [
+      {
+        "title": "Security Analyst Overview",
+        "url": "https://www.coursera.org/articles/security-analyst",
+        "type": "article"
+      },
+      {
+        "title": "Cybersecurity Roles Explained",
+        "url": "https://www.youtube.com/watch?v=U8ZB_W5x7YU",
+        "type": "video"
+      },
+      {
+        "title": "What is a Security Analyst?",
+        "url": "https://www.ibm.com/topics/security-analyst",
+        "type": "article"
+      }
+    ]
+  },
+  "_skills002": {
+    "title": "Skills Required",
+    "description": "A Security Analyst must master various skills, including:\n- Network monitoring and analysis\n- Vulnerability assessment and penetration testing\n- Threat detection and incident response\n- Knowledge of security tools like SIEM, firewalls, and antivirus software\n\nThese skills ensure they can protect organizational data effectively.",
+    "links": [
+      {
+        "title": "Cybersecurity Skills List",
+        "url": "https://www.coursera.org/articles/cybersecurity-skills",
+        "type": "article"
+      },
+      {
+        "title": "Penetration Testing Basics",
+        "url": "https://www.youtube.com/watch?v=1RfKDw_QpU4",
+        "type": "video"
+      }
+    ]
+  },
+  "_tools003": {
+    "title": "Tools and Technologies",
+    "description": "Security Analysts rely on various tools to secure systems, such as:\n- SIEM tools (Splunk, ArcSight)\n- Network monitoring software\n- Antivirus and malware detection software\n- Firewall and intrusion detection/prevention systems\n\nThese tools help in detecting, analyzing, and mitigating threats efficiently.",
+    "links": [
+      {
+        "title": "Top Security Tools for Analysts",
+        "url": "https://www.csoonline.com/article/3530232/top-cybersecurity-tools.html",
+        "type": "article"
+      },
+      {
+        "title": "SIEM Explained",
+        "url": "https://www.youtube.com/watch?v=QhlHgrb3Jf4",
+        "type": "video"
+      }
+    ]
+  },
+  "_careerpath004": {
+    "title": "Career Path",
+    "description": "A Security Analyst can advance in their career by gaining experience and certifications. Potential career growth includes:\n- Senior Security Analyst\n- Security Engineer\n- Security Consultant\n- Chief Information Security Officer (CISO)\n\nCertifications like CompTIA Security+, CEH, CISSP, and CISM can accelerate career advancement.",
+    "links": [
+      {
+        "title": "Cybersecurity Career Path",
+        "url": "https://www.cybrary.it/blog/cybersecurity-careers/",
+        "type": "article"
+      },
+      {
+        "title": "Certifications for Security Analysts",
+        "url": "https://www.sans.org/cyber-security-courses/career-track/",
+        "type": "article"
+      }
+    ]
+  }
+}

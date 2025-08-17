@@ -1,84 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:foxhub/widgets/customize_appbar.dart';
+import 'package:foxhub/widgets/customize_navbar.dart';
+
+import 'career_detail_screen.dart';
 
 class CyberSecurityScreen extends StatelessWidget {
   const CyberSecurityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cybersecurity Roadmap"),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepOrange, Colors.orangeAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          roadmapCard(
-            "Ethical Hacker",
-            "Master penetration testing and vulnerability assessment.",
-            "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/",
-          ),
-          roadmapCard(
-            "Security Analyst",
-            "Monitor systems, analyze threats, and prevent attacks.",
-            "https://www.isc2.org/Certifications/CISSP",
-          ),
-          roadmapCard(
-            "Cloud Security Specialist",
-            "Secure cloud environments like AWS, Azure, GCP.",
-            "https://aws.amazon.com/certification/",
-          ),
-        ],
-      ),
-    );
-  }
+    // Map career names to their JSON file paths
+    final careers = {
+      "Cloud Engineer (AWS)": "lib/data/roadmap-content/aws.json",
+      "Security Analyst":
+          "lib/data/roadmap-content/cybersecurity-security-analyst.json",
+      "Cloud Security Specialist":
+          "lib/data/roadmap-content/cloud-security-specialist.json",
+      "Cybersecurity": "lib/data/roadmap-content/cyber-security.json",
+      "Network Engineer": "lib/data/roadmap-content/network-engineer.json",
+      "Application Security Engineer":
+          "lib/data/roadmap-content/application-security-engineer.json",
+      "Penetration Tester": "lib/data/roadmap-content/pentester.json",
+    };
 
-  Widget roadmapCard(String title, String desc, String link) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Colors.orangeAccent, Colors.deepOrange],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Scaffold(
+      appBar: const CustomizeAppBar(title: "Cybersecurity Roadmap"),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.deepOrange],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(desc, style: const TextStyle(color: Colors.white70)),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () {},
-            child: Text(
-              link,
-              style: const TextStyle(
-                color: Colors.blueAccent,
-                decoration: TextDecoration.underline,
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: careers.length,
+          itemBuilder: (context, index) {
+            final careerName = careers.keys.elementAt(index);
+            final jsonPath = careers.values.elementAt(index);
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CareerDetailScreen(
+                      title: careerName,
+                      jsonPath: jsonPath,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.orangeAccent, Colors.deepOrange],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orangeAccent.withOpacity(0.4),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                      offset: const Offset(3, 3),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.8),
+                    width: 2,
+                  ),
+                ),
+                child: Text(
+                  careerName,
+                  style: const TextStyle(
+                    fontFamily: "PressStart2P",
+                    fontSize: 14,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black45,
+                        offset: Offset(1, 1),
+                        blurRadius: 1,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
+      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
     );
   }
 }

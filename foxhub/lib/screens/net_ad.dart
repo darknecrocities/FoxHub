@@ -11,8 +11,7 @@ class NetAdScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Map career names to their JSON files
     final careers = {
-      "Network Administrator":
-          "lib/data/roadmap-content/network-administrator.json",
+      "Linux Developer": "lib/data/roadmap-content/linux.json",
       "Server Side Game Developer ":
           "lib/data/roadmap-content/server-side-game-developer.json",
       "DevOps": "lib/data/roadmap-content/devops.json",
@@ -22,6 +21,7 @@ class NetAdScreen extends StatelessWidget {
       "System Design": "lib/data/roadmap-content/system-design.json",
       "Software Design Architect":
           "lib/data/roadmap-content/software-design-architecture.json",
+      "Network Engineer": "lib/data/roadmap-content/network-engineer.json",
     };
 
     return Scaffold(

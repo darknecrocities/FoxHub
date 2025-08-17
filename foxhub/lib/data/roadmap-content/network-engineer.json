@@ -1,0 +1,56 @@
+{
+  "_intro": {
+    "title": "Introduction",
+    "description": "Network Engineers design, implement, and maintain computer networks, including LANs, WANs, and cloud-based networks. They ensure network availability, performance, and security, while troubleshooting issues and optimizing connectivity.\n\nLearn more from the following resources:",
+    "links": [
+      {
+        "title": "Network Engineer Overview",
+        "url": "https://www.cisco.com/c/en/us/training-events/training-certifications/certifications.html",
+        "type": "article"
+      },
+      {
+        "title": "Networking Basics Tutorial",
+        "url": "https://www.youtube.com/watch?v=qiQR5rTSshw",
+        "type": "video"
+      }
+    ]
+  },
+  "_roles": {
+    "title": "Key Roles & Responsibilities",
+    "description": "Network Engineers are responsible for:\n- Designing and deploying network infrastructure\n- Configuring routers, switches, and firewalls\n- Monitoring network performance\n- Implementing security policies and protocols",
+    "links": [
+      {
+        "title": "Network Engineer Responsibilities",
+        "url": "https://www.simplilearn.com/tutorials/network-engineer-tutorial",
+        "type": "article"
+      }
+    ]
+  },
+  "_learning": {
+    "title": "Learning Path",
+    "description": "**Foundational Skills:**\n- TCP/IP, OSI Model, subnetting\n- Networking devices and protocols\n\n**Advanced Skills:**\n- Cisco CCNA / CCNP certifications\n- Network security and VPNs\n- Cloud networking (AWS, Azure, GCP)",
+    "links": [
+      {
+        "title": "CCNA Certification Guide",
+        "url": "https://www.cisco.com/c/en/us/training-events/training-certifications/certifications/associate/ccna.html",
+        "type": "course"
+      },
+      {
+        "title": "Network Security Basics",
+        "url": "https://www.coursera.org/learn/network-security",
+        "type": "course"
+      }
+    ]
+  },
+  "_career-growth": {
+    "title": "Career Growth",
+    "description": "Network Engineers can advance to roles like Senior Network Engineer, Network Architect, or IT Manager, and may also specialize in network security or cloud infrastructure.",
+    "links": [
+      {
+        "title": "Network Engineer Career Path",
+        "url": "https://www.techtarget.com/whatis/feature/Network-engineer-job-description",
+        "type": "article"
+      }
+    ]
+  }
+}

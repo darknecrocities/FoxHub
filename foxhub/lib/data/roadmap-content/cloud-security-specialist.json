@@ -1,0 +1,71 @@
+{
+  "_intro001": {
+    "title": "Introduction",
+    "description": "A Cloud Security Specialist is responsible for securing cloud-based systems and data. They ensure that cloud environments such as AWS, Azure, and GCP are protected against unauthorized access, data breaches, and other cyber threats.\n\nLearn more from the following resources:",
+    "links": [
+      {
+        "title": "Cloud Security Overview",
+        "url": "https://www.coursera.org/articles/cloud-security",
+        "type": "article"
+      },
+      {
+        "title": "What is Cloud Security?",
+        "url": "https://www.youtube.com/watch?v=DnQYZ9kzF6c",
+        "type": "video"
+      },
+      {
+        "title": "Cloud Security Fundamentals",
+        "url": "https://aws.amazon.com/security/",
+        "type": "article"
+      }
+    ]
+  },
+  "_skills002": {
+    "title": "Skills Required",
+    "description": "A Cloud Security Specialist should master:\n- Cloud architecture and deployment models\n- Identity and access management (IAM)\n- Security monitoring and compliance\n- Encryption and data protection techniques\n- Threat detection and incident response in cloud environments",
+    "links": [
+      {
+        "title": "Cloud Security Skills",
+        "url": "https://www.coursera.org/articles/cloud-security-skills",
+        "type": "article"
+      },
+      {
+        "title": "Cloud Security Tools",
+        "url": "https://www.youtube.com/watch?v=7rJQ5y7uXuk",
+        "type": "video"
+      }
+    ]
+  },
+  "_tools003": {
+    "title": "Tools and Technologies",
+    "description": "Common tools used by Cloud Security Specialists include:\n- Cloud-native security tools (AWS Security Hub, Azure Security Center, GCP Security Command Center)\n- SIEM and monitoring platforms\n- Firewalls and VPN solutions\n- Encryption and key management tools\n\nThese tools help in monitoring, detecting, and mitigating cloud-specific threats.",
+    "links": [
+      {
+        "title": "Cloud Security Tools Guide",
+        "url": "https://www.csoonline.com/article/3530556/top-cloud-security-tools.html",
+        "type": "article"
+      },
+      {
+        "title": "AWS Cloud Security Overview",
+        "url": "https://www.youtube.com/watch?v=v0k62j5pTg8",
+        "type": "video"
+      }
+    ]
+  },
+  "_careerpath004": {
+    "title": "Career Path",
+    "description": "Career progression for a Cloud Security Specialist may include:\n- Senior Cloud Security Specialist\n- Cloud Security Architect\n- Cloud Security Consultant\n- Chief Information Security Officer (CISO)\n\nCertifications such as CCSK, CCSP, AWS Certified Security, and Azure Security Engineer can boost career growth.",
+    "links": [
+      {
+        "title": "Cloud Security Career Path",
+        "url": "https://www.cybrary.it/blog/cloud-security-careers/",
+        "type": "article"
+      },
+      {
+        "title": "Cloud Security Certifications",
+        "url": "https://aws.amazon.com/certification/certified-security-specialty/",
+        "type": "article"
+      }
+    ]
+  }
+}
