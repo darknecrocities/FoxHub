@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/user_model.dart';
-import '../providers/auth_provider.dart';
+import '../../models/user_model.dart';
+import '../../providers/auth_provider.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -68,56 +68,71 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(darkBrown),
-            pixelBlock(darkBrown),
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(darkBrown),
-            pixelBlock(darkBrown),
-            pixelBlock(Colors.transparent, size: 12),
-          ]),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            pixelBlock(darkBrown),
-            pixelBlock(orange),
-            pixelBlock(orange),
-            pixelBlock(darkBrown),
-            pixelBlock(darkBrown),
-            pixelBlock(orange),
-            pixelBlock(orange),
-            pixelBlock(darkBrown),
-          ]),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            pixelBlock(orange),
-            pixelBlock(orange),
-            pixelBlock(lightOrange),
-            pixelBlock(lightOrange),
-            pixelBlock(lightOrange),
-            pixelBlock(lightOrange),
-            pixelBlock(orange),
-            pixelBlock(orange),
-          ]),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            pixelBlock(orange),
-            pixelBlock(white),
-            pixelBlock(white),
-            pixelBlock(darkBrown),
-            pixelBlock(darkBrown),
-            pixelBlock(white),
-            pixelBlock(white),
-            pixelBlock(orange),
-          ]),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(darkBrown),
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(darkBrown),
-            pixelBlock(darkBrown),
-            pixelBlock(Colors.transparent, size: 12),
-            pixelBlock(darkBrown),
-            pixelBlock(Colors.transparent, size: 12),
-          ]),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(darkBrown),
+              pixelBlock(darkBrown),
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(darkBrown),
+              pixelBlock(darkBrown),
+              pixelBlock(Colors.transparent, size: 12),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              pixelBlock(darkBrown),
+              pixelBlock(orange),
+              pixelBlock(orange),
+              pixelBlock(darkBrown),
+              pixelBlock(darkBrown),
+              pixelBlock(orange),
+              pixelBlock(orange),
+              pixelBlock(darkBrown),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              pixelBlock(orange),
+              pixelBlock(orange),
+              pixelBlock(lightOrange),
+              pixelBlock(lightOrange),
+              pixelBlock(lightOrange),
+              pixelBlock(lightOrange),
+              pixelBlock(orange),
+              pixelBlock(orange),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              pixelBlock(orange),
+              pixelBlock(white),
+              pixelBlock(white),
+              pixelBlock(darkBrown),
+              pixelBlock(darkBrown),
+              pixelBlock(white),
+              pixelBlock(white),
+              pixelBlock(orange),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(darkBrown),
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(darkBrown),
+              pixelBlock(darkBrown),
+              pixelBlock(Colors.transparent, size: 12),
+              pixelBlock(darkBrown),
+              pixelBlock(Colors.transparent, size: 12),
+            ],
+          ),
         ],
       ),
     );
@@ -165,7 +180,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (success) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful! Please login.')),
+          const SnackBar(
+            content: Text('Registration successful! Please login.'),
+          ),
         );
         Navigator.pushReplacement(
           context,
@@ -240,7 +257,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   // Form card with white background and shadows
                   Container(
-                    padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 30,
+                      horizontal: 25,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),
@@ -261,11 +281,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             controller: _fullname,
                             decoration: InputDecoration(
                               labelText: 'Full Name',
-                              prefixIcon: const Icon(Icons.person_outline, color: Colors.grey),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              prefixIcon: const Icon(
+                                Icons.person_outline,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -274,7 +302,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fillColor: Colors.grey.shade50,
                               filled: true,
                             ),
-                            validator: (val) => _validateNotEmpty(val, 'Full Name'),
+                            validator: (val) =>
+                                _validateNotEmpty(val, 'Full Name'),
                           ),
                           const SizedBox(height: 18),
 
@@ -283,11 +312,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             controller: _username,
                             decoration: InputDecoration(
                               labelText: 'Username',
-                              prefixIcon: const Icon(Icons.account_circle_outlined, color: Colors.grey),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              prefixIcon: const Icon(
+                                Icons.account_circle_outlined,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -296,7 +333,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fillColor: Colors.grey.shade50,
                               filled: true,
                             ),
-                            validator: (val) => _validateNotEmpty(val, 'Username'),
+                            validator: (val) =>
+                                _validateNotEmpty(val, 'Username'),
                           ),
                           const SizedBox(height: 18),
 
@@ -306,11 +344,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               labelText: 'Contact Number',
-                              prefixIcon: const Icon(Icons.phone_outlined, color: Colors.grey),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              prefixIcon: const Icon(
+                                Icons.phone_outlined,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -319,7 +365,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fillColor: Colors.grey.shade50,
                               filled: true,
                             ),
-                            validator: (val) => _validateNotEmpty(val, 'Contact Number'),
+                            validator: (val) =>
+                                _validateNotEmpty(val, 'Contact Number'),
                           ),
                           const SizedBox(height: 18),
 
@@ -329,11 +376,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               labelText: 'Email',
-                              prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              prefixIcon: const Icon(
+                                Icons.email_outlined,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -352,11 +407,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              prefixIcon: const Icon(
+                                Icons.lock_outline,
+                                color: Colors.grey,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -375,10 +438,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             value: _selectedCourse,
                             decoration: InputDecoration(
                               labelText: 'Select Course',
-                              contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18,
+                                horizontal: 20,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(color: Colors.grey.shade300),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
@@ -388,12 +456,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fillColor: Colors.grey.shade50,
                             ),
                             items: _courses
-                                .map((course) => DropdownMenuItem(
-                              value: course,
-                              child: Text(course),
-                            ))
+                                .map(
+                                  (course) => DropdownMenuItem(
+                                    value: course,
+                                    child: Text(course),
+                                  ),
+                                )
                                 .toList(),
-                            onChanged: (val) => setState(() => _selectedCourse = val!),
+                            onChanged: (val) =>
+                                setState(() => _selectedCourse = val!),
                           ),
 
                           const SizedBox(height: 30),
@@ -405,7 +476,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               onPressed: _register,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: orange,
-                                padding: const EdgeInsets.symmetric(vertical: 18),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(40),
                                 ),
@@ -414,7 +487,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ),
                               child: const Text(
                                 'Register',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -425,24 +501,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text('Already have an account? ',
-                                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              const Text(
+                                'Already have an account? ',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
                               TextButton(
                                 onPressed: () {
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                                    MaterialPageRoute(
+                                      builder: (_) => const LoginScreen(),
+                                    ),
                                   );
                                 },
                                 style: TextButton.styleFrom(
                                   foregroundColor: orange,
                                   padding: EdgeInsets.zero,
                                   minimumSize: const Size(50, 30),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: const Text(
                                   'Login here',
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
                             ],

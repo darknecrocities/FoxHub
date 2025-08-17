@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:foxhub/screens/login_screen.dart';
+import 'package:foxhub/screens/authentication/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {

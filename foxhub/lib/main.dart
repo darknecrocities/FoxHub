@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
-import 'screens/login_screen.dart';
-import 'screens/signup_screen.dart';
+import 'screens/authentication/login_screen.dart';
+import 'screens/authentication/signup_screen.dart';
 import 'screens/home_screen.dart';
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +31,7 @@ class MyApp extends StatelessWidget {
         // Show loading spinner while initializing
         if (snapshot.connectionState != ConnectionState.done) {
           return const MaterialApp(
-            home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            ),
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
           );
         }
 

@@ -1,0 +1,137 @@
+import 'package:flutter/material.dart';
+import 'package:foxhub/widgets/customize_back_button.dart';
+import 'package:foxhub/widgets/customize_navbar.dart';
+
+import 'detail/career_detail_screen.dart';
+
+class NetAdScreen extends StatelessWidget {
+  const NetAdScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Map career names to their JSON files
+    final careers = {
+      "Linux Developer": "lib/data/roadmap-content/linux.json",
+      "Server Side Game Developer":
+          "lib/data/roadmap-content/server-side-game-developer.json",
+      "DevOps": "lib/data/roadmap-content/devops.json",
+      "DevRel": "lib/data/roadmap-content/devrel.json",
+      "Cloud Developer (AWS)": "lib/data/roadmap-content/aws.json",
+      "Docker Developer": "lib/data/roadmap-content/docker.json",
+      "System Design": "lib/data/roadmap-content/system-design.json",
+      "Software Design Architect":
+          "lib/data/roadmap-content/software-design-architecture.json",
+      "Network Engineer": "lib/data/roadmap-content/network-engineer.json",
+    };
+
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove default back button
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.deepOrange, Colors.orangeAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: const Text(
+          "IT - Network Admin Roadmap",
+          style: TextStyle(fontFamily: "PressStart2P", color: Colors.white),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.deepOrange],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Column(
+          children: [
+            // Pixelated fox back button inside the body
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: CustomizeBackButton(
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ),
+
+            // Career list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: careers.length,
+                itemBuilder: (context, index) {
+                  final careerName = careers.keys.elementAt(index);
+                  final jsonPath = careers.values.elementAt(index);
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CareerDetailScreen(
+                            title: careerName,
+                            jsonPath: jsonPath,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Colors.orangeAccent, Colors.deepOrange],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.orangeAccent.withOpacity(0.4),
+                            blurRadius: 6,
+                            spreadRadius: 1,
+                            offset: const Offset(3, 3),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.8),
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        careerName,
+                        style: const TextStyle(
+                          fontFamily: "PressStart2P",
+                          fontSize: 14,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black45,
+                              offset: Offset(1, 1),
+                              blurRadius: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
+    );
+  }
+}

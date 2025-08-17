@@ -3,7 +3,7 @@ import 'package:foxhub/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // <--- added
 
-import '../screens/home_screen.dart';
+import '../home_screen.dart';
 import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
