@@ -11,7 +11,7 @@ import 'package:foxhub/screens/community.dart';
 import 'package:foxhub/screens/internship.dart';
 import 'package:foxhub/screens/organization.dart';
 import 'package:foxhub/screens/roadmap.dart';
-import 'package:foxhub/screens/search_screen.dart';
+import 'package:foxhub/screens/search/search_screen.dart';
 import 'package:foxhub/widgets/customize_appbar.dart';
 import 'package:foxhub/widgets/customize_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
