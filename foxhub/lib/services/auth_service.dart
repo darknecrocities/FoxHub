@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/user_model.dart';
 
 class AuthService {
@@ -8,7 +9,9 @@ class AuthService {
 
   Future<User?> signUp(UserModel user, String password) async {
     final credential = await _auth.createUserWithEmailAndPassword(
-        email: user.email, password: password);
+      email: user.email,
+      password: password,
+    );
     user.uid = credential.user!.uid;
     await _db.collection('users').doc(user.uid).set(user.toMap());
     return credential.user;
@@ -16,7 +19,9 @@ class AuthService {
 
   Future<User?> login(String email, String password) async {
     final credential = await _auth.signInWithEmailAndPassword(
-        email: email, password: password);
+      email: email,
+      password: password,
+    );
     return credential.user;
   }
 
