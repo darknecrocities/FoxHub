@@ -20,6 +20,8 @@ class NetAdScreen extends StatelessWidget {
       "Cloud Developer (AWS)": "lib/data/roadmap-content/aws.json",
       "Docker Developer": "lib/data/roadmap-content/docker.json",
       "System Design": "lib/data/roadmap-content/system-design.json",
+      "Software Design Architect":
+          "lib/data/roadmap-content/software-design-architecture.json",
     };
 
     return Scaffold(
