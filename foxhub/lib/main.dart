@@ -1,13 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:foxhub/config/firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'screens/authentication/login_screen.dart';
 import 'screens/authentication/signup_screen.dart';
 import 'screens/home_screen.dart';
+import 'package:foxhub/config/supabase_config.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ void main() {
   final futureInit = Future.wait([
     dotenv.load(fileName: ".env"),
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    SupabaseConfig.initialize()
   ]);
 
   runApp(MyApp(initFuture: futureInit));

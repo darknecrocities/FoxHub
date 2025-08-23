@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import '../services/adzuna_services.dart';
 import '../widgets/customize_appbar.dart';
 import '../widgets/customize_navbar.dart';
+import 'package:http/http.dart' as http; // for http.get
 
 class InternshipScreen extends StatefulWidget {
   const InternshipScreen({super.key});
@@ -17,6 +19,7 @@ class _InternshipScreenState extends State<InternshipScreen> {
   String jobTypeFilter = 'all';
   String sortFilter = 'date';
   bool loading = true;
+  final String baseUrl = "http://192.168.100.62:3000/api/jobs";
   final Map<int, bool> expandedMap = {}; // track which card is expanded
 
   @override
@@ -25,14 +28,28 @@ class _InternshipScreenState extends State<InternshipScreen> {
     fetchJobs();
   }
 
-  Future<void> fetchJobs() async {
+  Future<void> fetchJobs({String query = "developer"}) async {
     setState(() => loading = true);
-    jobs = await _service.fetchJobs(
-      jobTypeFilter: jobTypeFilter,
-      sort: sortFilter,
-    );
-    setState(() => loading = false);
+    try {
+      final uri = Uri.parse(baseUrl).replace(queryParameters: {'query': query});
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          jobs = data.map((e) => Job.fromJson(e as Map<String, dynamic>)).toList();
+          loading = false;
+        });
+      } else {
+        print("Error from backend: ${response.statusCode} ${response.body}");
+        setState(() => loading = false);
+      }
+    } catch (e) {
+      print("Backend fetch error: $e");
+      setState(() => loading = false);
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
