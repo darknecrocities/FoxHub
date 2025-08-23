@@ -275,6 +275,20 @@
             </list>
           </value>
         </entry>
+        <entry key="hive">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/hive-2.2.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="hive_flutter">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/hive_flutter-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="http">
           <value>
             <list>
@@ -783,6 +797,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_fonts-6.3.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/gotrue-2.13.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/gtk-2.1.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hive-2.2.3/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hive_flutter-1.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/http-1.5.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/http_parser-4.1.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/image-3.3.0/lib" />

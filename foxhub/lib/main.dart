@@ -9,6 +9,7 @@ import 'screens/authentication/login_screen.dart';
 import 'screens/authentication/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'package:foxhub/config/supabase_config.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,10 @@ void main() {
   final futureInit = Future.wait([
     dotenv.load(fileName: ".env"),
     Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    SupabaseConfig.initialize()
+    SupabaseConfig.initialize(),
+    Hive.initFlutter(),
+    Hive.openBox('jobCache'),// Local DB for jobs
+    Hive.openBox('apiUsage') // Tracks daily API calls
   ]);
 
   runApp(MyApp(initFuture: futureInit));

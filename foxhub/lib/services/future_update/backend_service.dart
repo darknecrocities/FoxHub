@@ -1,7 +1,8 @@
+/*
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
+// Job class
 class Job {
   final String title;
   final String company;
@@ -38,33 +39,26 @@ class Job {
   }
 }
 
-class AdzunaService {
-  final String appId = '4e8b8448'; // Your Adzuna App ID
-  final String appKey = '216a175e0c703586e158f0ab7cc08bb1'; // Your App Key
+// Backend service that fetches jobs
+class BackendService {
+  final String baseUrl =  "https://fox-hub.vercel.app/api/jobs";
 
-  Future<List<Job>> fetchJobs({
-    String query = 'developer',
-    String location = '', // optional
-    String jobTypeFilter = 'all',
-    String sort = 'date',
-  }) async {
-    final url = Uri.parse(
-      'https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=$appId&app_key=$appKey&results_per_page=20&what=$query${location.isNotEmpty ? '&where=$location' : ''}',
-    );
-
+  Future<List<Job>> fetchJobs({String query = "developer"}) async {
     try {
+      final url = Uri.parse("$baseUrl?query=$query");
       final response = await http.get(url);
+
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List results = data['results'];
-        return results.map((e) => Job.fromJson(e)).toList();
+        final List data = json.decode(response.body);
+        return data.map((e) => Job.fromJson(e)).toList();
       } else {
-        print(response.body);
-        throw Exception("Failed to fetch jobs");
+        print("Error from backend: ${response.body}");
+        throw Exception("Failed to fetch jobs from backend");
       }
     } catch (e) {
-      print("Error fetching jobs: $e");
+      print("Backend fetch error: $e");
       return [];
     }
   }
 }
+*/
