@@ -29,8 +29,8 @@ class Job {
 
     return Job(
       title: json['title'] ?? 'N/A',
-      company: json['company']['display_name'] ?? 'N/A',
-      location: json['location']['display_name'] ?? 'N/A',
+      company: json['company']?['display_name'] ?? 'N/A',
+      location: json['location']?['display_name'] ?? 'N/A',
       contractType: json['contract_type'] ?? 'N/A',
       salary: salaryText,
       description: json['description'] ?? 'No description available',
@@ -39,32 +39,59 @@ class Job {
 }
 
 class AdzunaService {
-  final String appId = 'YOUR_APP_ID'; // Your Adzuna App ID
-  final String appKey = 'API_KEY'; // Your App Key
+  final String appId = '4e8b8448'; // Your Adzuna App ID
+  final String appKey = '216a175e0c703586e158f0ab7cc08bb1'; // Your App Key
+
+  /// List of IT job queries
+  final List<String> itQueries = [
+    "software engineer",
+    "data analyst",
+    "AI engineer",
+    "prompt engineer",
+    "backend developer",
+    "frontend developer",
+    "cloud engineer",
+    "machine learning engineer",
+    "cybersecurity",
+    "full stack developer",
+    "web developer",
+    "IT support",
+    "DevOps engineer",
+  ];
 
   Future<List<Job>> fetchJobs({
-    String query = 'developer',
     String location = '', // optional
-    String jobTypeFilter = 'all',
     String sort = 'date',
+    required String jobTypeFilter,
   }) async {
-    final url = Uri.parse(
-      'https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=$appId&app_key=$appKey&results_per_page=20&what=$query${location.isNotEmpty ? '&where=$location' : ''}',
-    );
+    List<Job> allJobs = [];
 
     try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final List results = data['results'];
-        return results.map((e) => Job.fromJson(e)).toList();
-      } else {
-        print(response.body);
-        throw Exception("Failed to fetch jobs");
+      for (String query in itQueries) {
+        final url = Uri.parse(
+          'https://api.adzuna.com/v1/api/jobs/us/search/1'
+          '?app_id=$appId&app_key=$appKey'
+          '&results_per_page=10'
+          '&what=$query'
+          '${location.isNotEmpty ? '&where=$location' : ''}'
+          '&sort_by=$sort',
+        );
+
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          final List results = data['results'];
+          allJobs.addAll(results.map((e) => Job.fromJson(e)).toList());
+        } else {
+          print(
+            "API Error [${response.statusCode}] for query $query: ${response.body}",
+          );
+        }
       }
     } catch (e) {
       print("Error fetching jobs: $e");
-      return [];
     }
+
+    return allJobs;
   }
 }
