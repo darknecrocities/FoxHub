@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../config/supabase_config.dart';
 import '../widgets/customize_appbar.dart';
 import '../widgets/customize_navbar.dart';
+import '../widgets/community_widgets/post_input.dart';
+import '../widgets/community_widgets/post_feed.dart';
+import '../widgets/community_widgets/filter_dialog.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -13,233 +15,143 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
+  String currentUserName = "";
   List<Map<String, dynamic>> posts = [];
   bool isLoading = true;
-  final TextEditingController _postController = TextEditingController();
+  bool isUserLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _loadCurrentUser();
     _loadPosts();
   }
 
-  @override
-  void dispose() {
-    _postController.dispose();
-    super.dispose();
+  /// Load current user's fullName from Firebase Firestore
+  Future<void> _loadCurrentUser() async {
+    try {
+      final firebaseUser = await SupabaseConfig.client.auth.currentUser;
+      if (firebaseUser != null) {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser.id)
+            .get();
+
+        setState(() {
+          currentUserName = doc.data()?['fullName'] ?? "Unknown";
+          isUserLoading = false;
+        });
+      } else {
+        setState(() {
+          currentUserName = "Unknown";
+          isUserLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error loading user: $e");
+      setState(() {
+        currentUserName = "Unknown";
+        isUserLoading = false;
+      });
+    }
   }
 
-  Future<void> _loadPosts() async {
+  /// Load posts with optional filter by author
+  Future<void> _loadPosts({String? filterAuthor}) async {
+    setState(() => isLoading = true);
+
     try {
-      final response = await SupabaseConfig.client
+      final postResponse = await SupabaseConfig.client
           .from('posts')
-          .select('id, author_name, content, image_url, created_at')
+          .select('id, uid, content, image_url, created_at')
           .order('created_at', ascending: false);
 
+      final List<Map<String, dynamic>> fetchedPosts =
+      List<Map<String, dynamic>>.from(postResponse);
+
+      for (var post in fetchedPosts) {
+        // Fetch author name from Firebase
+        final postUid = post['uid'];
+        if (postUid != null && postUid.isNotEmpty) {
+          final doc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(postUid)
+              .get();
+          post['author_name'] = doc.data()?['fullName'] ?? "Unknown";
+        } else {
+          post['author_name'] = "Unknown";
+        }
+
+        // Apply author filter if provided
+        if (filterAuthor != null && filterAuthor.isNotEmpty) {
+          if (post['author_name'] != filterAuthor) continue;
+        }
+
+        // Fetch replies for this post
+        final replyResponse = await SupabaseConfig.client
+            .from('replies')
+            .select()
+            .eq('post_id', post['id'])
+            .order('created_at', ascending: true);
+
+        post['replies'] = List<Map<String, dynamic>>.from(replyResponse);
+
+        // Add author names to replies
+        for (var reply in post['replies']) {
+          final replyUid = reply['uid'];
+          if (replyUid != null && replyUid.isNotEmpty) {
+            final replyDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(replyUid)
+                .get();
+            reply['author_name'] = replyDoc.data()?['fullName'] ?? "Unknown";
+          } else {
+            reply['author_name'] = "Unknown";
+          }
+        }
+      }
+
       setState(() {
-        posts = List<Map<String, dynamic>>.from(response);
+        posts = fetchedPosts;
         isLoading = false;
       });
     } catch (e) {
-      print("Error fetching posts: $e");
+      print("Error loading posts: $e");
       setState(() => isLoading = false);
     }
   }
 
-  Future<void> _addPost() async {
-    final content = _postController.text.trim();
-    if (content.isEmpty) return;
-
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      final displayName = user?.displayName ?? "Anonymous User";
-
-      await SupabaseConfig.client.from('posts').insert({
-        'author_name': displayName,
-        'content': content,
-        'image_url': '',
-      });
-
-      _postController.clear();
-      _loadPosts();
-    } catch (e) {
-      print("Error adding post: $e");
-    }
-  }
-
-  String _formatDate(String? isoDate) {
-    if (isoDate == null) return '';
-    final date = DateTime.parse(isoDate);
-    return DateFormat('MMM d, yyyy • hh:mm a').format(date);
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (isUserLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: const CustomizeAppBar(title: "FoxHub Community"),
+      bottomNavigationBar: CustomizeNavBar(currentIndex: 0),
       body: Column(
         children: [
-          // Post input (LinkedIn style)
-          Card(
-            margin: const EdgeInsets.all(12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 22,
-                    backgroundImage: AssetImage('assets/images/default_user.png'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: _postController,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        hintText: "Start a post...",
-                        hintStyle: TextStyle(color: Colors.grey[600]),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.send, color: Colors.blue),
-                    onPressed: _addPost,
-                  ),
-                ],
-              ),
-            ),
+          PostInput(
+            currentUserName: currentUserName,
+            // matches Function({String? filterAuthor})? type
+            onPostAdded: ({String? filterAuthor}) => _loadPosts(filterAuthor: filterAuthor),
           ),
-
-          // Feed
+          FilterButton(
+            onFilterApplied: ({String? filterAuthor}) => _loadPosts(filterAuthor: filterAuthor),
+          ),
           Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-              onRefresh: _loadPosts,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  final post = posts[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Header (user + timestamp)
-                          Row(
-                            children: [
-                              const CircleAvatar(
-                                radius: 22,
-                                backgroundImage: AssetImage('assets/images/default_user.png'),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      post['author_name'] ?? "Anonymous User",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Text(
-                                      _formatDate(post['created_at']),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.more_horiz, color: Colors.grey),
-                                onPressed: () {},
-                              )
-                            ],
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Content
-                          Text(
-                            post['content'] ?? "",
-                            style: const TextStyle(fontSize: 15, height: 1.4),
-                          ),
-                          const SizedBox(height: 8),
-
-                          // Image
-                          if (post['image_url'] != null &&
-                              post['image_url'].toString().isNotEmpty)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                post['image_url'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-
-                          const SizedBox(height: 12),
-
-                          // Divider
-                          Divider(color: Colors.grey[300]),
-
-                          // Actions
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildAction(Icons.thumb_up_alt_outlined, "Like"),
-                              _buildAction(Icons.mode_comment_outlined, "Comment"),
-                              _buildAction(Icons.share_outlined, "Share"),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+            child: PostFeed(
+              posts: posts,
+              isLoading: isLoading,
+              currentUserName: currentUserName,
+              refreshPosts: ({String? filterAuthor}) => _loadPosts(filterAuthor: filterAuthor),
             ),
           ),
         ],
       ),
-      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
-    );
-  }
-
-  Widget _buildAction(IconData icon, String label) {
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: Colors.grey[700]),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(color: Colors.grey[700], fontSize: 14),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
-
