@@ -5,6 +5,9 @@ import 'package:foxhub/screens/home_screen.dart'; // for RoadmapEntry and Search
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:foxhub/models/roadmap_entry.dart';
+import 'search_service.dart';
+import 'search.dart';
 
 class SearchScreen extends StatefulWidget {
   final String keyword;

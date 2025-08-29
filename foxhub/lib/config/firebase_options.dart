@@ -20,7 +20,7 @@ class DefaultFirebaseOptions {
     appId: '1:54567040829:android:be2cea3517b439f6f83754',
     messagingSenderId: '54567040829',
     projectId: 'foxhub-3b7bb',
-    storageBucket: 'foxhub-3b7bb.appspot.com',
+    storageBucket: 'foxhub-3b7bb.firebasestorage.app',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
@@ -28,6 +28,6 @@ class DefaultFirebaseOptions {
     appId: '1:54567040829:web:e01a91d47a664383f83754',
     messagingSenderId: '54567040829',
     projectId: 'foxhub-3b7bb',
-    storageBucket: 'foxhub-3b7bb.appspot.com',
+    storageBucket: 'foxhub-3b7bb.firebasestorage.app',
   );
 }
