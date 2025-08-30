@@ -19,7 +19,7 @@ class ProjectScreen extends StatefulWidget {
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
-  final String apiKey = "AIzaSyBReNcsna-9knQO37tZ5KInNbd1_L1XQkI"; // ⚠️ Do NOT hardcode in prod
+  final String apiKey = "YOUR API"; // ⚠️ Do NOT hardcode in prod
   String? selectedCareer;
   String? selectedLevel = "Beginner"; // default selection
   bool loading = false;
@@ -54,7 +54,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       setState(() {
         project = Project(
           title: "Error",
-          description: "${e}",
+          description: "There was an issue with the API: ${e.toString()}",
           concept: "",
           techStack: const [],
           difficulty: 0,
@@ -63,10 +63,16 @@ class _ProjectScreenState extends State<ProjectScreen> {
           courseOutline: const [],
         );
       });
+      if (e.toString().contains('503')) {
+        // Retry logic, e.g., try again after 2 seconds
+        await Future.delayed(const Duration(seconds: 2));
+        await _generate(regenerate: regenerate); // retry the request
+      }
     } finally {
       if (mounted) setState(() => loading = false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
