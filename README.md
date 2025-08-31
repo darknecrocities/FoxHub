@@ -168,7 +168,9 @@ _To be added._
 ## Contact 📬
 
 For questions or contributions, contact the FoxHub team.
+
 Developer: Arron Kian M. Parejas
+
 Gmail: parejasarronkian@gmail.com 
 
 ---
