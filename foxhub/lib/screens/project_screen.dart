@@ -19,7 +19,7 @@ class ProjectScreen extends StatefulWidget {
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
-  final String apiKey = "YOUR API"; // ⚠️ Do NOT hardcode in prod
+  final String apiKey = "API"; // ⚠️ Do NOT hardcode in prod
   String? selectedCareer;
   String? selectedLevel = "Beginner"; // default selection
   bool loading = false;
