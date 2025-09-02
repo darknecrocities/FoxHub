@@ -4,12 +4,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../widgets/customize_appbar.dart';
-import '../widgets/customize_navbar.dart';
-import '../widgets/difficulty_selector.dart';
-import '../widgets/project_card.dart';
-import '../services/project_service.dart';
-import '../models/project.dart';
+import '../../widgets/customize_appbar.dart';
+import '../../widgets/customize_navbar.dart';
+import '../../widgets/difficulty_selector.dart';
+import '../../widgets/project_card.dart';
+import '../../services/project_service.dart';
+import '../../models/project.dart';
 
 class ProjectScreen extends StatefulWidget {
   const ProjectScreen({super.key});
@@ -20,7 +20,7 @@ class ProjectScreen extends StatefulWidget {
 
 class _ProjectScreenState extends State<ProjectScreen> {
 
-  final String apiKey = ""; // ⚠️ Do NOT hardcode in prod// ⚠️ Do NOT hardcode in prod
+  final String apiKey = "API_KEY";
   String? selectedCareer;
   String? selectedLevel = "Beginner"; // default selection
   bool loading = false;
