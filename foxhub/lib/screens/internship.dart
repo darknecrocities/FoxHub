@@ -29,7 +29,7 @@ class _InternshipScreenState extends State<InternshipScreen> {
     setState(() => loading = true);
     jobs = await _service.fetchJobs(
       jobTypeFilter: jobTypeFilter,
-      sort: sortFilter,
+      query: sortFilter,
     );
     setState(() => loading = false);
   }

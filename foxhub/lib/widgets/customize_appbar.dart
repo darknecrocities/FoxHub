@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/screens/authentication/login_screen.dart';
+import 'package:foxhub/screens/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomizeAppBar({super.key, required String title});
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
     return AppBar(
       backgroundColor: Colors.orange.shade400,
       elevation: 4,
@@ -25,6 +30,39 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
+
+      // 🔹 Profile Picture from Firestore
+      actions: [
+        StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            final photoUrl = snapshot.data?.get('photoUrl');
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.white,
+                  backgroundImage: photoUrl != null
+                      ? NetworkImage(photoUrl)
+                      : const AssetImage("assets/default_avatar.png")
+                  as ImageProvider,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -46,9 +84,31 @@ Drawer buildAppDrawer(BuildContext context) {
               end: Alignment.bottomRight,
             ),
           ),
-          child: const Text(
-            "Menu",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              // 🔹 Profile pic in Drawer too
+              StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  final photoUrl = snapshot.data?.get('photoUrl');
+                  return CircleAvatar(
+                    radius: 28,
+                    backgroundImage: photoUrl != null
+                        ? NetworkImage(photoUrl)
+                        : const AssetImage("assets/default_avatar.png")
+                    as ImageProvider,
+                  );
+                },
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                "Menu",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
         ListTile(

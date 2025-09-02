@@ -6,7 +6,8 @@ plugins {
 }
 
 android {
-    namespace = "com.example.foxhub"
+    namespace = "com.example.foxhub"  // Set the correct namespace for your app
+
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 

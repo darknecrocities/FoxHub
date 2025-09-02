@@ -115,11 +115,6 @@ FoxHub solves these problems by providing an all-in-one platform that guides stu
 - Partner for challenges and hackathons
 - Receive applications and chat with candidates
 
-### Admins 👑
-- Manage all user roles and content
-- System dashboard with analytics
-- Global notifications
-- Certificate and profile validation
 
 ---
 
@@ -153,7 +148,6 @@ FoxHub solves these problems by providing an all-in-one platform that guides stu
 | Calendar/Tasks    | Google Calendar & Tasks API| Event and deadline synchronization               |
 | Analytics         | Firebase Analytics, Google Data Studio | Engagement and reporting                         |
 | AI/ML (optional)  | OpenAI API, Gemini API, Firebase ML Kit | Career suggestions, OCR, chatbot                |
-| Admin Dashboard   | Flutter Web, Chart.js      | Admin interface and analytics dashboards         |
 | Deployment        | Firebase Hosting, Google Cloud Run/App Engine | Hosting and deployment                           |
 | Version Control   | GitHub + GitHub Actions    | Source control and CI/CD                          |
 
@@ -174,7 +168,9 @@ _To be added._
 ## Contact 📬
 
 For questions or contributions, contact the FoxHub team.
+
 Developer: Arron Kian M. Parejas
+
 Gmail: parejasarronkian@gmail.com 
 
 ---
