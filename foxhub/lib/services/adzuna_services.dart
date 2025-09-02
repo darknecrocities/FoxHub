@@ -41,7 +41,6 @@ class Job {
 class AdzunaService {
   final String appId = '4e8b8448'; // Your Adzuna App ID
   final String appKey = '216a175e0c703586e158f0ab7cc08bb1'; // Your App Key
-<<<<<<< HEAD
 
   /// List of IT job queries
   final List<String> itQueries = [
@@ -59,13 +58,12 @@ class AdzunaService {
     "IT support",
     "DevOps engineer",
   ];
-=======
->>>>>>> d182db660aaf8cc296493db6c2297f1ae633c67e
 
   Future<List<Job>> fetchJobs({
     String location = '', // optional
     String sort = 'date',
     required String jobTypeFilter,
+    required String query,
   }) async {
     List<Job> allJobs = [];
 

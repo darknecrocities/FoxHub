@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/screens/home_screen.dart';
-import 'package:foxhub/screens/organization.dart';
+import 'package:foxhub/screens/organizations/organization.dart';
 import 'package:foxhub/screens/profile.dart';
 
 class CustomizeNavBar extends StatelessWidget {

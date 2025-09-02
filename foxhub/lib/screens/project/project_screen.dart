@@ -3,13 +3,13 @@
 // =====================================
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fl_chart/fl_chart.dart';
-import '../widgets/customize_appbar.dart';
-import '../widgets/customize_navbar.dart';
-import '../widgets/difficulty_selector.dart';
-import '../widgets/project_card.dart';
-import '../services/project_service.dart';
-import '../models/project.dart';
+
+import '../../models/project.dart';
+import '../../services/project_service.dart';
+import '../../widgets/customize_appbar.dart';
+import '../../widgets/customize_navbar.dart';
+import '../../widgets/difficulty_selector.dart';
+import '../../widgets/project_card.dart';
 
 class ProjectScreen extends StatefulWidget {
   const ProjectScreen({super.key});
@@ -19,7 +19,7 @@ class ProjectScreen extends StatefulWidget {
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
-  final String apiKey = "AIzaSyAWHOEZXR55Llw4BbHpyAmOmE6QYsbSA2YI"; // ⚠️ Do NOT hardcode in prod
+  final String apiKey = "API_KEY";
   String? selectedCareer;
   String? selectedLevel = "Beginner"; // default selection
   bool loading = false;
@@ -73,7 +73,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final orange = Colors.orangeAccent.shade400;
@@ -93,7 +92,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
           children: [
             Text(
               "Choose Your Career Field",
-              style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.orange.shade700),
+              style: GoogleFonts.pressStart2p(
+                fontSize: 12,
+                color: Colors.orange.shade700,
+              ),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -107,14 +109,25 @@ class _ProjectScreenState extends State<ProjectScreen> {
               ),
               value: selectedCareer,
               hint: const Text("Select a career field"),
-              items: careerOptions.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+              items: careerOptions
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                  .toList(),
               onChanged: (val) => setState(() => selectedCareer = val),
             ),
 
             const SizedBox(height: 16),
-            Text("Difficulty Level", style: GoogleFonts.pressStart2p(fontSize: 12, color: Colors.orange)),
+            Text(
+              "Difficulty Level",
+              style: GoogleFonts.pressStart2p(
+                fontSize: 12,
+                color: Colors.orange,
+              ),
+            ),
             const SizedBox(height: 8),
-            DifficultySelector(value: selectedLevel, onChanged: (v) => setState(() => selectedLevel = v)),
+            DifficultySelector(
+              value: selectedLevel,
+              onChanged: (v) => setState(() => selectedLevel = v),
+            ),
 
             const SizedBox(height: 20),
             Row(
@@ -124,8 +137,13 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orange,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: loading ? null : () => _generate(),
                     icon: const Icon(Icons.auto_awesome),
@@ -138,10 +156,18 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: orange,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: orange)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: orange),
+                      ),
                     ),
-                    onPressed: loading ? null : () => _generate(regenerate: true),
+                    onPressed: loading
+                        ? null
+                        : () => _generate(regenerate: true),
                     icon: const Icon(Icons.refresh),
                     label: const Text("Regenerate"),
                   ),
@@ -149,7 +175,13 @@ class _ProjectScreenState extends State<ProjectScreen> {
             ),
 
             const SizedBox(height: 20),
-            if (loading) const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+            if (loading)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             if (!loading && project != null) ProjectCard(project: project!),
           ],
         ),
