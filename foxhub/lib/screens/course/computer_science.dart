@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/widgets/customize_back_button.dart';
 import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/customize_appbar.dart';
 
 import 'detail/career_detail_screen.dart';
 
@@ -9,7 +10,6 @@ class ComputerScienceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Map of career options and their corresponding JSON file
     final careers = {
       "AI Engineer": "lib/data/roadmap-content/ai-engineer.json",
       "AI Data Scientist": "lib/data/roadmap-content/ai-data-scientist.json",
@@ -25,23 +25,8 @@ class ComputerScienceScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepOrange, Colors.orangeAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        title: const Text(
-          "Computer Science Roadmap",
-          style: TextStyle(fontFamily: "PressStart2P", color: Colors.white),
-        ),
+      appBar: const CustomizeAppBar(
+        title: "Computer Science Roadmap", // ✅ use custom app bar
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -120,7 +105,7 @@ class ComputerScienceScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
+      bottomNavigationBar: const CustomizeNavBar(currentIndex: 0),
     );
   }
 }

@@ -114,7 +114,7 @@ class CyberSecurityScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
+      bottomNavigationBar: const CustomizeNavBar(currentIndex: 0),
     );
   }
 }

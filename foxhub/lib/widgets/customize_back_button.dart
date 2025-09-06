@@ -13,31 +13,20 @@ class _CustomizeBackButtonState extends State<CustomizeBackButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    // Tap scale animation
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 120),
     );
 
     _scaleAnimation = Tween<double>(
       begin: 1.0,
-      end: 0.92,
+      end: 0.9,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // Gradient animation for text
-    _colorAnimation = ColorTween(
-      begin: Colors.orangeAccent,
-      end: Colors.deepOrange,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // Loop gradient animation
-    _controller.repeat(reverse: true);
   }
 
   @override
@@ -70,50 +59,56 @@ class _CustomizeBackButtonState extends State<CustomizeBackButton>
         builder: (context, child) =>
             Transform.scale(scale: _scaleAnimation.value, child: child),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Colors.orangeAccent, Colors.deepOrange],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+            color: Colors.black,
+            border: Border.all(
+              color: Colors.orangeAccent,
+              width: 3,
             ),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white70, width: 2),
+            borderRadius: BorderRadius.circular(6), // Pixel-ish corners
             boxShadow: [
               BoxShadow(
-                color: Colors.deepOrange.withOpacity(0.6),
-                blurRadius: 6,
-                spreadRadius: 1,
-                offset: const Offset(3, 3),
+                color: Colors.orangeAccent.withOpacity(0.8),
+                blurRadius: 0,
+                spreadRadius: 2,
+                offset: const Offset(3, 3), // pixel shadow style
               ),
             ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.arrow_back, color: Colors.white, size: 20),
-              const SizedBox(width: 6),
-              AnimatedBuilder(
-                animation: _colorAnimation,
-                builder: (context, child) => Text(
-                  "Back",
-                  style: TextStyle(
-                    fontFamily: "PressStart2P",
-                    fontSize: 14,
-                    color: _colorAnimation.value,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 3,
-                        color: Colors.white.withOpacity(0.7),
-                        offset: const Offset(1, 1),
-                      ),
-                      Shadow(
-                        blurRadius: 3,
-                        color: Colors.black.withOpacity(0.3),
-                        offset: const Offset(-1, 1),
-                      ),
-                    ],
+              // Pixelated arrow (not just the default icon)
+              Container(
+                width: 16,
+                height: 16,
+                decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(color: Colors.orangeAccent, width: 3),
+                    bottom: BorderSide(color: Colors.orangeAccent, width: 3),
                   ),
+                ),
+                transform: Matrix4.rotationZ(-0.8),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "BACK",
+                style: TextStyle(
+                  fontFamily: "PressStart2P",
+                  fontSize: 12,
+                  color: Colors.orangeAccent,
+                  letterSpacing: 2,
+                  shadows: [
+                    Shadow(
+                      color: Colors.white.withOpacity(0.8),
+                      offset: const Offset(1, 1),
+                    ),
+                    const Shadow(
+                      color: Colors.black,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
                 ),
               ),
             ],

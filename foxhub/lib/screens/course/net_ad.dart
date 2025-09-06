@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/widgets/customize_back_button.dart';
 import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/customize_appbar.dart';
 
 import 'detail/career_detail_screen.dart';
 
@@ -13,35 +14,20 @@ class NetAdScreen extends StatelessWidget {
     final careers = {
       "Linux Developer": "lib/data/roadmap-content/linux.json",
       "Server Side Game Developer":
-          "lib/data/roadmap-content/server-side-game-developer.json",
+      "lib/data/roadmap-content/server-side-game-developer.json",
       "DevOps": "lib/data/roadmap-content/devops.json",
       "DevRel": "lib/data/roadmap-content/devrel.json",
       "Cloud Developer (AWS)": "lib/data/roadmap-content/aws.json",
       "Docker Developer": "lib/data/roadmap-content/docker.json",
       "System Design": "lib/data/roadmap-content/system-design.json",
       "Software Design Architect":
-          "lib/data/roadmap-content/software-design-architecture.json",
+      "lib/data/roadmap-content/software-design-architecture.json",
       "Network Engineer": "lib/data/roadmap-content/network-engineer.json",
     };
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove default back button
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepOrange, Colors.orangeAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        title: const Text(
-          "IT - Network Admin Roadmap",
-          style: TextStyle(fontFamily: "PressStart2P", color: Colors.white),
-        ),
+      appBar: const CustomizeAppBar(
+        title: "IT - Network Admin Roadmap", // ✅ custom app bar instead of default AppBar
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -131,7 +117,7 @@ class NetAdScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
+      bottomNavigationBar: const CustomizeNavBar(currentIndex: 0),
     );
   }
 }
