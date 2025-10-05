@@ -96,12 +96,6 @@ FoxHub solves these problems by providing an all-in-one platform that guides stu
 - Certificate vault
 - Progress and skill analytics with badges
 
-### Faculty 👩‍🏫
-- Activate course roadmaps
-- Endorse and rank student skills and involvement
-- Upload course materials and career modules
-- Receive reminders from organizations
-
 ### Student Organizations 🎉
 - Event management and attendance verification
 - Certificate issuance
