@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../models/roadmap_entry.dart';
+import '../../../models/roadmap_entry.dart';
 
 class RoadmapDetailPage extends StatelessWidget {
   final RoadmapEntry entry;

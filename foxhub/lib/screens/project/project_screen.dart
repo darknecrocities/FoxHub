@@ -6,10 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/project.dart';
 import '../../services/project_service.dart';
-import '../../widgets/customize_appbar.dart';
-import '../../widgets/customize_navbar.dart';
-import '../../widgets/difficulty_selector.dart';
-import '../../widgets/project_card.dart';
+import '../../widgets/appbar/customize_appbar.dart';
+import '../../widgets/navbar/customize_navbar.dart';
+import '../../widgets/selector/difficulty_selector.dart';
+import '../../widgets/cards/project_card.dart';
 
 class ProjectScreen extends StatefulWidget {
   const ProjectScreen({super.key});
@@ -78,7 +78,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
     final orange = Colors.orangeAccent.shade400;
 
     return Scaffold(
-      appBar: const CustomizeAppBar(title: "Project Ideas"),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

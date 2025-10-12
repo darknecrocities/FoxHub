@@ -3,8 +3,8 @@ import 'package:foxhub/screens/course/computer_science.dart';
 import 'package:foxhub/screens/course/cybersecurity.dart';
 import 'package:foxhub/screens/course/net_ad.dart';
 import 'package:foxhub/screens/course/web_dev.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RoadmapScreen extends StatelessWidget {
@@ -43,6 +43,7 @@ class RoadmapScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       bottomNavigationBar: const CustomizeNavBar(currentIndex: 0),
       body: Container(
         decoration: BoxDecoration(gradient: orangeGradient),

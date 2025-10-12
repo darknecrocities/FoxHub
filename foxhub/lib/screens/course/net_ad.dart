@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foxhub/widgets/customize_back_button.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
+import 'package:foxhub/widgets/buttons/customize_back_button.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
 
 import 'detail/career_detail_screen.dart';
 
@@ -26,9 +26,8 @@ class NetAdScreen extends StatelessWidget {
     };
 
     return Scaffold(
-      appBar: const CustomizeAppBar(
-        title: "IT - Network Admin Roadmap", // ✅ custom app bar instead of default AppBar
-      ),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
 import 'package:foxhub/screens/home_screen.dart'; // for RoadmapEntry and SearchService
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';

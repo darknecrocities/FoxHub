@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
-import 'package:foxhub/widgets/org_card.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
+import 'package:foxhub/widgets/cards/org_card.dart';
 import '../../data/orgs_data.dart';
 import 'package:foxhub/screens/organizations/organization_detail.dart';
 
@@ -11,7 +11,8 @@ class OrganizationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomizeAppBar(title: "Organizations"),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

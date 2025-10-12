@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:foxhub/config/firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'screens/authentication/login_screen.dart';
-import 'screens/authentication/signup_screen.dart';
+import 'screens/authentication/signup/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'package:foxhub/config/supabase_config.dart';
 import 'package:hive_flutter/hive_flutter.dart';

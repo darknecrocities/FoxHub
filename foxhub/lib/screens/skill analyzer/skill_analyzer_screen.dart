@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -312,7 +312,8 @@ $resumeText
 
     return Scaffold(
       backgroundColor: Colors.orange.shade100,
-      appBar: const CustomizeAppBar(title: "Pixel Skill Analyzer"),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       bottomNavigationBar: const CustomizeNavBar(currentIndex: 1),
       body: Padding(
         padding: const EdgeInsets.all(16),

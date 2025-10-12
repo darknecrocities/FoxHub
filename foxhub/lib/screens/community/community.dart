@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../config/supabase_config.dart';
-import '../../widgets/customize_appbar.dart';
-import '../../widgets/customize_navbar.dart';
+import '../../widgets/appbar/customize_appbar.dart';
+import '../../widgets/navbar/customize_navbar.dart';
 import '../../widgets/community_widgets/post_input.dart';
 import '../../widgets/community_widgets/post_feed.dart';
 import '../../widgets/community_widgets/filter_dialog.dart';
@@ -130,7 +130,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
     }
 
     return Scaffold(
-      appBar: const CustomizeAppBar(title: "FoxHub Community"),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       bottomNavigationBar: CustomizeNavBar(currentIndex: 0),
       body: Column(
         children: [

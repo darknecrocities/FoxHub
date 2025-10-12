@@ -1,170 +1,222 @@
-
-# FoxHub 🚀
-
-## Overview 🌐
-
-**FoxHub** is a unified platform designed to bridge the gap between education and career opportunities in the IT sector for college students, especially those from rural or provincial areas in the Philippines and other developing countries.
-
-The platform empowers students by providing personalized IT career roadmaps, skill tracking, remote internship opportunities, and portfolio building tools — all accessible regardless of geographic location or bandwidth constraints.
+# 🦊 FoxHub
+**Applications Development and Emerging Technologies Project**  
+*Developed by:* **Arron Kian M. Parejas (CS-304)**  
+📅 **Date:** October 11, 2025
 
 ---
 
-## Problem Statement ❗
+## 📘 Overview
+FoxHub is a unified platform that bridges the gap between **education** and **career opportunities** in the IT field — designed to help **college students**, especially those in **rural or underserved regions**, build their skills, explore internships, and grow professionally.
 
-College students in IT-related programs face several barriers in accessing career-building opportunities:
-
-1. **Limited Exposure to IT Career Paths** 💡  
-   Most students only know generic roles like "web developer" or "IT support" and lack guidance on emerging fields such as AI/ML, cybersecurity, and DevOps.
-
-2. **Geographic Inequality** 🌍  
-   Students in urban centers have access to career fairs, internships, and tech events, while those in provinces are often left behind due to lack of remote internship offerings and limited local opportunities.
-
-3. **Lack of Industry-Ready Preparation** 🛠️  
-   Students often don't know which skills or projects to focus on, resulting in weak resumes and no centralized platform to showcase their work.
-
-4. **Fragmented Tools and Resources** 📚  
-   Learning resources, internship listings, and skill trackers are scattered across multiple platforms, creating confusion and inefficiency.
+It features a **career path builder**, **skill analyzer**, **internship/job board**, **community forums**, **organization hub**, and more — all powered by **Flutter**, **Firebase**, and **Next.js** backend integrations.
 
 ---
 
-## Solution: FoxHub 🛠️✨
+## 🚀 Getting Started
 
-FoxHub solves these problems by providing an all-in-one platform that guides students from education to employment, regardless of location.
-
-### For Students 🎓
-- **Personalized IT Career Roadmaps** 🗺️  
-  Structured learning paths with milestones, resources, and certifications.
-
-- **Skill Tracker & Portfolio Builder** 📈🖼️  
-  Track progress, upload projects, and build a live portfolio connected to GitHub or Google Drive.
-
-- **Remote Internship Marketplace** 💻🌐  
-  Apply directly to remote or hybrid internships tailored to your skills and progress.
-
-- **Low Bandwidth & Offline Mode** 📶🚫  
-  Downloadable learning modules and SMS-based notifications ensure accessibility for rural users.
-
-### For Employers & Educators 🏢👩‍🏫
-- **Remote-First Internship Listings** 📋  
-  Post remote roles and access verified student profiles.
-
-- **Talent Dashboard** 📊  
-  Filter and match students by skills, progress, or university.
-
-- **CSR & Nationwide Talent Network** 🤝  
-  Help uplift students from less privileged areas while discovering untapped potential.
+### 🔧 Prerequisites
+Before running the project, make sure you have the following installed:
+- **Flutter SDK** (latest stable version)
+- **Node.js & npm** (for backend)
+- **Git** (for cloning and version control)
+- **Visual Studio Code / Android Studio**
 
 ---
 
-## Key Impacts 🎯
-
-| Problem                            | FoxHub’s Solution                   |
-|----------------------------------|--------------------------------------|
-| Students unaware of modern IT roles | Interactive, visual career roadmaps  |
-| No access to internships in provinces | Remote-only internship board          |
-| No guidance or portfolio          | Built-in skill tracker + live portfolio |
-| Scattered resources               | One app to learn, track, apply, and grow |
-| Inequality in exposure            | Equal opportunity regardless of location |
-
----
-
-## Minimum Viable Product (MVP) Features ✅
-
-- User registration/login (students, faculty, companies, organizations, admin)
-- Dashboard for career roadmaps and goals
-- Internship board with remote-first opportunities
-- Portfolio builder (resume, organization participation, faculty ratings)
-- Faculty endorsement system (star rankings and remarks)
-- Organization dashboard (event hosting, attendance, uploads, certifications)
-- Company dashboard (post openings, access verified student profiles)
-- Google Calendar/Tasks integration for events and deadlines
-- Firebase authentication and real-time data sync
-- Basic analytics per user (progress, involvement, rank)
+## 📂 Project Structure
+```
+FoxHub/
+│
+├── lib/
+│   ├── screens/
+│   │   ├── project_screen.dart
+│   │   ├── skill_analyzer.dart
+│   │   └── ...
+│   ├── services/
+│   │   ├── adzuna_services.dart
+│   │   └── future_update/
+│   │       └── adzuna_services.dart
+│   └── main.dart
+│
+├── backend/ <-- Next.js API backend
+│   ├── pages/api/
+│   └── ...
+│
+└── README.md
+```
 
 ---
 
-## Full Feature Set 🌟
+## 🔑 API Keys Setup
 
-### Students 🎓
-- Career path builder with learning, applying, and evaluation
-- Smart resume and portfolio builder with auto-updated logs
-- Personalized calendar for tasks, events, and exams
-- Skills tracker (quizzes, achievements, coding challenges)
-- Organization finder based on interests
-- Internship/job board with filters
-- Faculty ranking and endorsement
-- Certificate vault
-- Progress and skill analytics with badges
+FoxHub uses two external APIs for enhanced functionality:
 
-### Student Organizations 🎉
-- Event management and attendance verification
-- Certificate issuance
-- Upload knowledge base modules
-- Partner with companies for internships
-- Push notifications
+| API Name | Purpose | File Location | Line | Key |
+|-----------|----------|---------------|------|------|
+| **Adzuna API** | Fetches IT job & internship listings | `lib/services/adzuna_services.dart` | 43 | `216a175e0c703586e158f0ab7cc08bb1` |
+| **Gemini API (Google)** | Provides AI-powered features like skill analysis and project idea generation | `lib/screens/project_screen.dart` (L22), `lib/screens/skill_analyzer.dart` (L72) |  | `AIzaSyCpwrfw4KoMaCyuykTUT3Zcrh1KkeZ1ltg` |
 
-### Companies 🏢
-- Search and filter student profiles
-- Post remote/hybrid internships
-- Partner for challenges and hackathons
-- Receive applications and chat with candidates
-
+> ⚠️ **Security Note:**  
+> Do not expose your API keys in public repositories.  
+> For production, store these keys in a `.env` file and access them securely.
 
 ---
 
-## Future Features & Add-ons 🚀
+## 🔒 Using .env for API Keys
 
-- AI-powered career suggestions and resume analyzer 🤖
-- Smart matching algorithms for internships and mentorships 🔍
-- Chatbot support and voice input 🗣️
-- Dedicated mobile app with offline access 📱
-- Academic integration with LMS and GPA sync 🎓
-- Gamification with leaderboards and badges 🏆
-- Mentorship systems and community boards 👥
-- Expanded analytics and recruitment tools 📊
-- Blockchain certificate verification 🔗
-- End-to-end encrypted messaging 🔒
-- API integrations (LinkedIn, calendar sync, etc.) 🔌
+1. Create a `.env` file in the project root directory.
+2. Add your keys inside:
+   ```env
+   ADZUNA_API_KEY=your_adzuna_key_here
+   GEMINI_API_KEY=your_gemini_key_here
+   ```
+3. Install a package like [`flutter_dotenv`](https://pub.dev/packages/flutter_dotenv).
+4. Load your environment variables in `main.dart`:
+   ```dart
+   import 'package:flutter_dotenv/flutter_dotenv.dart';
 
----
-
-## Technology Stack 🛠️
-
-| Category          | Technology                 | Purpose                                          |
-|-------------------|----------------------------|-------------------------------------------------|
-| Frontend          | Flutter, Dart              | Cross-platform mobile and web app development   |
-| Backend/API       | Python Flask, Flask-SocketIO | Lightweight backend and real-time communication |
-| Authentication    | Firebase Authentication    | Secure user authentication                       |
-| Database          | Firebase Firestore, Supabase Postgres | Real-time NoSQL and relational data storage      |
-| Cloud Functions   | Google Cloud Functions     | Serverless backend logic                         |
-| Storage           | Firebase Storage           | File and certificate storage                     |
-| Notifications     | Firebase Cloud Messaging   | Push notifications                               |
-| Calendar/Tasks    | Google Calendar & Tasks API| Event and deadline synchronization               |
-| Analytics         | Firebase Analytics, Google Data Studio | Engagement and reporting                         |
-| AI/ML (optional)  | OpenAI API, Gemini API, Firebase ML Kit | Career suggestions, OCR, chatbot                |
-| Deployment        | Firebase Hosting, Google Cloud Run/App Engine | Hosting and deployment                           |
-| Version Control   | GitHub + GitHub Actions    | Source control and CI/CD                          |
+   Future<void> main() async {
+     await dotenv.load(fileName: ".env");
+     runApp(MyApp());
+   }
+   ```
+5. Access your keys:
+   ```dart
+   final adzunaKey = dotenv.env['ADZUNA_API_KEY'];
+   ```
 
 ---
 
-## Getting Started 🚀
+## 🧩 How to Run the Application (Frontend)
 
-_To be added based on development progress and deployment specifics._
+### Step 1 — Navigate to the project directory:
+```bash
+cd foxhub
+```
+
+### Step 2 — Install dependencies:
+```bash
+flutter pub get
+```
+
+### Step 3 — Run the application:
+```bash
+flutter run
+```
+✅ The app should now compile and run on your connected emulator or device.  
+(No need to start the backend for this step — it uses mock or live APIs directly.)
 
 ---
 
-## License 📄
+## ⚙️ Running the Backend (Next.js API)
+If you want to test the Next.js backend features:
 
-_To be added._
+### Step 1 — Navigate to the backend directory:
+```bash
+cd ../backend
+```
+
+### Step 2 — Install dependencies:
+```bash
+npm install
+```
+
+### Step 3 — Start the development server:
+```bash
+npm run dev
+```
+This will start the backend locally at  
+👉 http://localhost:3000
 
 ---
 
-## Contact 📬
+## 🔄 Linking Backend and Frontend
+1. Go to your Flutter app folder → `lib/services/future_update/adzuna_services.dart`
+2. Copy the commented-out Next.js API code provided there.
+3. Navigate to → `lib/services/adzuna_services.dart`
+4. Paste and replace the current API call section with the copied one.
 
-For questions or contributions, contact the FoxHub team.
-
-Developer: Arron Kian M. Parejas
-
-Gmail: parejasarronkian@gmail.com 
+This will allow the Flutter app to use your **Next.js local backend** instead of the live Adzuna API.
 
 ---
+
+## 🧠 Using the App Features
+
+### 🎯 For Students
+- **Career Path Builder** → Personalized IT learning roadmap
+- **Skill Analyzer** → Upload a resume to analyze your skill gaps
+- **Internship Board** → Find remote/hybrid job opportunities
+- **Community Forum** → Connect and collaborate with others
+- **Profile Section** → Showcase your skills, projects, and achievements
+
+### 🏢 For Organizations & Companies
+- **Register Organizations** → Add info, modules, and events
+- **Post Internships/Jobs** → Share remote/hybrid opportunities
+- **Student Filtering** → Search students by skills or interests
+
+---
+
+## 🧰 Technologies Used
+
+| Category | Technologies |
+|-----------|---------------|
+| Frontend | Flutter, Dart |
+| Backend / API | Next.js, Supabase, Firebase |
+| Authentication | Firebase Auth |
+| Database | Firestore, Supabase Postgres |
+| Cloud & Hosting | Firebase Hosting, Google Cloud Run |
+| Storage | Firebase Storage |
+| Notifications | Firebase Cloud Messaging |
+| AI / ML | Gemini API, Firebase ML Kit |
+| Version Control | GitHub, GitHub Actions |
+
+---
+
+## 🧪 Development Commands
+
+| Action | Command |
+|--------|----------|
+| Run Flutter app | `flutter run` |
+| Get dependencies | `flutter pub get` |
+| Analyze code | `flutter analyze` |
+| Format code | `flutter format .` |
+| Run Next.js backend | `npm run dev` |
+| Build production backend | `npm run build` |
+
+---
+
+## 👨‍💻 Developer
+
+**Arron Kian M. Parejas**  
+📧 parejasarronkian@gmail.com  
+🧭 Sole Developer & Designer of FoxHub
+
+- Designed and developed frontend UI using Flutter
+- Integrated Firebase Authentication, Firestore, and Next.js backend
+- Implemented AI-based skill analysis using Gemini API
+- Conducted testing, debugging, and deployment
+
+---
+
+## 🗂️ Repository & Resources
+
+🔗 **GitHub Repository:**  
+[https://github.com/darknecrocities/FoxHub](https://github.com/darknecrocities/FoxHub)
+
+🎞️ **Presentation Slides (Canva):**  
+_To be provided by developer_
+
+---
+
+## 📈 Future Recommendations
+- Integrate AI Career Coach for guided planning
+- Add Certification Partnerships with Coursera/LinkedIn Learning
+- Enable Offline Mode for low-bandwidth users
+- Implement Gamification for progress tracking
+- Develop Analytics Dashboard for user performance insights
+
+---
+
+## 🧩 License
+This project is part of the **Applications Development and Emerging Technologies (6ADET)** course requirement.  
+All rights reserved © 2025 — **Arron Kian M. Parejas**

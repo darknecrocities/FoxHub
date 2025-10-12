@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../services/adzuna_services.dart';
-import '../widgets/customize_appbar.dart';
-import '../widgets/customize_navbar.dart';
+import '../../services/adzuna_services.dart';
+import '../../widgets/appbar/customize_appbar.dart';
+import '../../widgets/navbar/customize_navbar.dart';
 
 class InternshipScreen extends StatefulWidget {
   const InternshipScreen({super.key});
@@ -37,7 +37,8 @@ class _InternshipScreenState extends State<InternshipScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomizeAppBar(title: "Internships"),
+      appBar: const CustomizeAppBar(title: ''),
+      drawer: buildAppDrawer(context),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

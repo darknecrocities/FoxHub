@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/screens/home_screen.dart';
 import 'package:foxhub/screens/organizations/organization.dart';
-import 'package:foxhub/screens/profile.dart';
+import 'package:foxhub/screens/profile/profile.dart';
 
 class CustomizeNavBar extends StatelessWidget {
-  final int? currentIndex; // allow null so nothing is selected
+  final int? currentIndex;
   const CustomizeNavBar({super.key, this.currentIndex});
+
+  void _navigateWithAnimation(BuildContext context, Widget page) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 450),
+        reverseTransitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // 🔹 You can try different animations below (fade, slide, scale, rotation, etc.)
+          const beginOffset = Offset(0.0, 0.2); // slide from bottom
+          const endOffset = Offset.zero;
+          final curve = Curves.easeOutCubic;
+
+          final tween = Tween(begin: beginOffset, end: endOffset)
+              .chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +46,8 @@ class CustomizeNavBar extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 12,
             spreadRadius: 2,
           ),
         ],
@@ -33,27 +61,23 @@ class CustomizeNavBar extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           elevation: 0,
-          currentIndex: currentIndex ?? -1, // -1 = nothing selected
+          currentIndex: currentIndex ?? -1,
           selectedItemColor: Colors.orange.shade400,
           unselectedItemColor: Colors.grey.shade500,
           showSelectedLabels: true,
           showUnselectedLabels: true,
           onTap: (index) {
-            if (index == 0) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
-              );
-            } else if (index == 1) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const OrganizationScreen()),
-              );
-            } else if (index == 2) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const ProfileScreen()),
-              );
+            if (index == currentIndex) return; // no re-navigation if same tab
+            switch (index) {
+              case 0:
+                _navigateWithAnimation(context, const HomeScreen());
+                break;
+              case 1:
+                _navigateWithAnimation(context, const OrganizationScreen());
+                break;
+              case 2:
+                _navigateWithAnimation(context, const ProfileScreen());
+                break;
             }
           },
           items: const [

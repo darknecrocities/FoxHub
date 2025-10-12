@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:foxhub/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // <--- added
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home_screen.dart';
 import 'forgot_password_screen.dart';
-import 'signup_screen.dart';
+import 'signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen>
   late AnimationController _controller;
   late Animation<double> _fadeIn;
 
-  bool rememberMe = false; // <--- added
+  bool rememberMe = false;
 
   @override
   void initState() {
@@ -34,10 +34,9 @@ class _LoginScreenState extends State<LoginScreen>
     _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
 
-    _loadSavedCredentials(); // <--- added
+    _loadSavedCredentials();
   }
 
-  // Load saved email, pass, rememberMe flag
   void _loadSavedCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     final savedEmail = prefs.getString('email') ?? '';
@@ -53,7 +52,6 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  // Save or clear credentials based on rememberMe
   Future<void> _saveCredentials() async {
     final prefs = await SharedPreferences.getInstance();
     if (rememberMe) {
@@ -75,163 +73,51 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
-  // Helper widget to build each pixel block for fox icon
-  Widget pixelBlock(Color color, {double size = 12}) {
-    return Container(width: size, height: size, color: color);
+  // === Custom Page Transition ===
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 600),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const beginOffset = Offset(0.0, 0.2); // slide up
+        const endOffset = Offset.zero;
+        const curve = Curves.easeOutCubic;
+
+        final tween = Tween(begin: beginOffset, end: endOffset)
+            .chain(CurveTween(curve: curve));
+        final fadeAnim =
+        CurvedAnimation(parent: animation, curve: Curves.easeIn);
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: FadeTransition(
+            opacity: fadeAnim,
+            child: child,
+          ),
+        );
+      },
+    );
   }
 
-  // Fox pixel icon as a widget using Rows and Columns
-  Widget foxPixelIcon() {
-    // Colors
-    const Color darkBrown = Color(0xFF5C2A00);
-    const Color orange = Color(0xFFF97316);
-    const Color lightOrange = Color(0xFFFBAF4C);
-    const Color white = Color(0xFFF5E6D0);
-
-    // Background orange with circles painted via Stack and Positioned containers with low opacity
+  Widget foxIconImage() {
     return Container(
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        color: const Color(0xFFF97316), // bright orange bg
-        shape: BoxShape.circle,
+        color: const Color(0xFFFCE8D8),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.shade700.withOpacity(0.4),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.orangeAccent.withOpacity(0.25),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          // Subtle circle patterns (overlapping translucent circles)
-          Positioned(
-            top: 20,
-            left: 15,
-            child: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 60,
-            right: 20,
-            child: Container(
-              width: 45,
-              height: 45,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.12),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 50,
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.10),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-
-          // Center pixel fox face
-          Center(
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFFCE8D8),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.orange.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Pixel rows for sharper fox face shape
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(darkBrown),
-                      pixelBlock(orange),
-                      pixelBlock(orange),
-                      pixelBlock(orange),
-                      pixelBlock(orange),
-                      pixelBlock(darkBrown),
-                      pixelBlock(Colors.transparent, size: 12),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pixelBlock(darkBrown),
-                      pixelBlock(lightOrange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(darkBrown),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pixelBlock(orange),
-                      pixelBlock(lightOrange),
-                      pixelBlock(white),
-                      pixelBlock(white),
-                      pixelBlock(white),
-                      pixelBlock(white),
-                      pixelBlock(lightOrange),
-                      pixelBlock(orange),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pixelBlock(orange),
-                      pixelBlock(white),
-                      pixelBlock(darkBrown),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(darkBrown),
-                      pixelBlock(white),
-                      pixelBlock(orange),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(darkBrown),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(Colors.transparent, size: 12),
-                      pixelBlock(darkBrown),
-                      pixelBlock(Colors.transparent, size: 12),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.all(16),
+      child: Image.asset(
+        'lib/assets/images/fox_icon.png',
+        fit: BoxFit.contain,
       ),
     );
   }
@@ -241,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
     final orange = Colors.orangeAccent.shade400;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF5E1), // soft orange background
+      backgroundColor: const Color(0xFFFFF5E1),
       body: FadeTransition(
         opacity: _fadeIn,
         child: Center(
@@ -249,19 +135,17 @@ class _LoginScreenState extends State<LoginScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Fox pixel icon at the top, with shadow and margin
+                // Fox icon
                 Container(
                   margin: const EdgeInsets.only(bottom: 30),
-                  child: foxPixelIcon(),
+                  child: foxIconImage(),
                 ),
 
-                // Login card with rounded corners and shadow
+                // Login card
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 30),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 25,
-                  ),
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
@@ -276,17 +160,20 @@ class _LoginScreenState extends State<LoginScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Foxhub title with pixel font
                       Text(
                         "Foxhub",
-                        style: TextStyle(
-                          fontSize: 32,
+                        style: const TextStyle(
+                          fontFamily: 'PressStart2P',
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[900],
+                          letterSpacing: 1.5,
+                          color: Color(0xFF5C2A00),
                         ),
                       ),
                       const SizedBox(height: 25),
 
-                      // Email TextField with icon prefix
+                      // Email input
                       TextField(
                         controller: email,
                         decoration: InputDecoration(
@@ -296,12 +183,11 @@ class _LoginScreenState extends State<LoginScreen>
                             color: Colors.grey,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 20,
-                          ),
+                              vertical: 18, horizontal: 20),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderSide:
+                            BorderSide(color: Colors.grey.shade300),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -314,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                       const SizedBox(height: 18),
 
-                      // Password TextField with icon prefix
+                      // Password input
                       TextField(
                         controller: pass,
                         obscureText: true,
@@ -325,12 +211,11 @@ class _LoginScreenState extends State<LoginScreen>
                             color: Colors.grey,
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 18,
-                            horizontal: 20,
-                          ),
+                              vertical: 18, horizontal: 20),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
+                            borderSide:
+                            BorderSide(color: Colors.grey.shade300),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
@@ -340,10 +225,9 @@ class _LoginScreenState extends State<LoginScreen>
                           filled: true,
                         ),
                       ),
-
                       const SizedBox(height: 12),
 
-                      // Remember Me checkbox <---- ADDED
+                      // Remember me
                       Row(
                         children: [
                           Checkbox(
@@ -359,10 +243,9 @@ class _LoginScreenState extends State<LoginScreen>
                           const Text("Remember Me"),
                         ],
                       ),
-
                       const SizedBox(height: 16),
 
-                      // Big rounded orange login button
+                      // Login button
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -372,12 +255,11 @@ class _LoginScreenState extends State<LoginScreen>
                               listen: false,
                             ).login(email.text.trim(), pass.text.trim());
                             if (success) {
-                              await _saveCredentials(); // <--- ADDED
+                              await _saveCredentials();
+
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const HomeScreen(),
-                                ),
+                                _createRoute(const HomeScreen()),
                               );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -391,7 +273,8 @@ class _LoginScreenState extends State<LoginScreen>
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: orange,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            padding:
+                            const EdgeInsets.symmetric(vertical: 18),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
@@ -401,16 +284,18 @@ class _LoginScreenState extends State<LoginScreen>
                           child: const Text(
                             "Login",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontFamily: 'PressStart2P',
+                              fontSize: 12,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
                       ),
-
                       const SizedBox(height: 18),
 
-                      // Bottom text row with forgot password and signup
+                      // Links
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -418,42 +303,41 @@ class _LoginScreenState extends State<LoginScreen>
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const ForgotPasswordScreen(),
-                                ),
+                                _createRoute(const ForgotPasswordScreen()),
                               );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.grey[800],
                               padding: EdgeInsets.zero,
                               minimumSize: const Size(50, 30),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              tapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: const Text(
                               "Forgot password?",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 12),
                             ),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => const SignUpScreen(),
-                                ),
+                                _createRoute(const SignUpScreen()),
                               );
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: orange,
                               padding: EdgeInsets.zero,
                               minimumSize: const Size(50, 30),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              tapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: const Text(
                               "No account? Sign up",
                               style: TextStyle(
+                                fontFamily: 'PressStart2P',
+                                fontSize: 8,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
                               ),
                             ),
                           ),

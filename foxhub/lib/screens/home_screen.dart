@@ -4,19 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foxhub/screens/community/community.dart';
-import 'package:foxhub/screens/internship.dart';
+import 'package:foxhub/screens/internship/internship.dart';
 import 'package:foxhub/screens/organizations/organization.dart';
-import 'package:foxhub/screens/roadmap.dart';
+import 'package:foxhub/screens/roadmap/roadmap.dart';
 import 'package:foxhub/screens/search/search_screen.dart';
-import 'package:foxhub/widgets/customize_appbar.dart';
-import 'package:foxhub/widgets/customize_navbar.dart';
+import 'package:foxhub/widgets/appbar/customize_appbar.dart';
+import 'package:foxhub/widgets/navbar/customize_navbar.dart';
 import 'package:foxhub/screens/project/project_screen.dart';
 import 'package:foxhub/models/roadmap_entry.dart';
 import 'package:foxhub/screens/search/search_service.dart';
 import 'community/fox_logo.dart';
 import 'community/feature_button.dart';
 import 'search/search_suggestion.dart';
-import 'skill_analyzer_screen.dart';
+import 'skill analyzer/skill_analyzer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,15 +25,25 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   String firstName = "";
   final TextEditingController _searchController = TextEditingController();
   List<RoadmapEntry> searchResults = [];
   Timer? _debounce;
+  late AnimationController _controller;
+  late Animation<double> _fadeIn;
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeIn = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _controller.forward();
+
     _loadUserFirstName();
   }
 
@@ -48,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
         final data = doc.data();
         final fullName = data != null ? (data['username'] ?? '') : '';
         setState(() {
-          firstName = fullName.isNotEmpty ? fullName.split(' ').first : 'Friend';
+          firstName =
+          fullName.isNotEmpty ? fullName.split(' ').first : 'Friend';
         });
       } else {
         setState(() => firstName = 'Friend');
@@ -70,8 +81,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Custom animated route transition
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 600),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const beginOffset = Offset(0.0, 0.15);
+        const endOffset = Offset.zero;
+        final curve = Curves.easeOutCubic;
+
+        final slideTween =
+        Tween(begin: beginOffset, end: endOffset).chain(CurveTween(curve: curve));
+        final fadeAnimation =
+        CurvedAnimation(parent: animation, curve: Curves.easeIn);
+
+        return SlideTransition(
+          position: animation.drive(slideTween),
+          child: FadeTransition(opacity: fadeAnimation, child: child),
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
+    _controller.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -83,160 +118,142 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: const CustomizeAppBar(title: ''),
       drawer: buildAppDrawer(context),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.orange.shade50, Colors.white],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+      body: FadeTransition(
+        opacity: _fadeIn,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade50, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: ListView(
-          children: [
-            Row(
-              children: [
-                const FoxLogo(size: 64),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    "Welcome back, ${firstName.isNotEmpty ? firstName : "Friend"}!",
-                    style: GoogleFonts.pressStart2p(
-                      fontSize: 14,
-                      color: Colors.orange.shade700,
-                      shadows: [
-                        Shadow(
-                          color: Colors.orange.shade300,
-                          blurRadius: 6,
-                          offset: const Offset(1, 1),
-                        ),
-                      ],
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          child: ListView(
+            children: [
+              // Welcome Section
+              Row(
+                children: [
+                  const FoxLogo(size: 64),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      "Welcome back, ${firstName.isNotEmpty ? firstName : "Friend"}!",
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 14,
+                        color: Colors.orange.shade700,
+                        shadows: [
+                          Shadow(
+                            color: Colors.orange.shade300,
+                            blurRadius: 6,
+                            offset: const Offset(1, 1),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                ],
+              ),
+              const SizedBox(height: 20),
 
-            // Search Bar
-            TextField(
-              controller: _searchController,
-              textInputAction: TextInputAction.search,
-              onChanged: onSearchChanged,
-              onSubmitted: (value) {
-                if (value.trim().isNotEmpty) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => SearchScreen(keyword: value.trim()),
-                    ),
-                  );
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Search roadmap, organization, internship...",
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 16,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide(color: orange),
+              // Search Bar
+              TextField(
+                controller: _searchController,
+                textInputAction: TextInputAction.search,
+                onChanged: onSearchChanged,
+                onSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      _createRoute(SearchScreen(keyword: value.trim())),
+                    );
+                  }
+                },
+                decoration: InputDecoration(
+                  hintText: "Search roadmap, organization, internship...",
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 0,
+                    horizontal: 16,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide(color: orange),
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Search Results List
-            if (_searchController.text.isNotEmpty && searchResults.isNotEmpty)
-              SearchSuggestionList(entries: searchResults),
+              // Search Results
+              if (_searchController.text.isNotEmpty && searchResults.isNotEmpty)
+                SearchSuggestionList(entries: searchResults),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Filter Chips
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                FilterChip(
-                  label: const Text("Date"),
-                  onSelected: (_) {},
-                  selectedColor: Colors.orange.shade100,
-                ),
-                FilterChip(
-                  label: const Text("Category"),
-                  onSelected: (_) {},
-                  selectedColor: Colors.orange.shade100,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
-            // Feature Buttons
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                FeatureButton(
-                  icon: Icons.map,
-                  title: "Career Roadmaps",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const RoadmapScreen()),
+              // Feature Buttons
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  FeatureButton(
+                    icon: Icons.map,
+                    title: "Career Roadmaps",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const RoadmapScreen()),
+                    ),
                   ),
-                ),
-                FeatureButton(
-                  icon: Icons.work,
-                  title: "Internships",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const InternshipScreen()),
+                  FeatureButton(
+                    icon: Icons.work,
+                    title: "Internships",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const InternshipScreen()),
+                    ),
                   ),
-                ),
-                FeatureButton(
-                  icon: Icons.group,
-                  title: "Organizations",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const OrganizationScreen()),
+                  FeatureButton(
+                    icon: Icons.group,
+                    title: "Organizations",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const OrganizationScreen()),
+                    ),
                   ),
-                ),
-                FeatureButton(
-                  icon: Icons.forum,
-                  title: "Community Forums",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CommunityScreen()),
+                  FeatureButton(
+                    icon: Icons.forum,
+                    title: "Community Forums",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const CommunityScreen()),
+                    ),
                   ),
-                ),
-                FeatureButton(
-                  icon: Icons.lightbulb,
-                  title: "Project Ideas",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ProjectScreen()),
+                  FeatureButton(
+                    icon: Icons.lightbulb,
+                    title: "Project Ideas",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const ProjectScreen()),
+                    ),
                   ),
-                ),
-                FeatureButton(
-                  icon: Icons.analytics,
-                  title: "Skill Analyzer",
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SkillAnalyzerScreen()),
+                  FeatureButton(
+                    icon: Icons.analytics,
+                    title: "Skill Analyzer",
+                    onTap: () => Navigator.push(
+                      context,
+                      _createRoute(const SkillAnalyzerScreen()),
+                    ),
                   ),
-                ),
-              ],
-            ),
-
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: const CustomizeNavBar(currentIndex: 0),
