@@ -40,7 +40,7 @@ class Job {
 
 class AdzunaService {
   final String appId = '4e8b8448'; // Your Adzuna App ID
-  final String appKey = 'YOUR_API_KEY'; // Your App Key
+  final String appKey = 'YOUR_APP_KEY'; // Your App Key
 
   /// List of IT job queries
   final List<String> itQueries = [

@@ -51,10 +51,10 @@ FoxHub/
 
 FoxHub uses two external APIs for enhanced functionality:
 
-| API Name | Purpose | File Location | Line | Key |
-|-----------|----------|---------------|------|------|
-| **Adzuna API** | Fetches IT job & internship listings | `lib/services/adzuna_services.dart` | 43 | `216a175e0c703586e158f0ab7cc08bb1` |
-| **Gemini API (Google)** | Provides AI-powered features like skill analysis and project idea generation | `lib/screens/project_screen.dart` (L22), `lib/screens/skill_analyzer.dart` (L72) |  | `AIzaSyCpwrfw4KoMaCyuykTUT3Zcrh1KkeZ1ltg` |
+| API Name | Purpose | File Location | Line                                                    | Key |
+|-----------|----------|---------------|---------------------------------------------------------|------|
+| **Adzuna API** | Fetches IT job & internship listings | `lib/services/adzuna_services.dart` | 43                                                      | `216a175e0c703586e158f0ab7cc08bb1` |
+| **Gemini API (Google)** | Provides AI-powered features like skill analysis and project idea generation | `lib/screens/project_screen.dart` (L22), `lib/screens/skill_analyzer.dart` (L72) | line 22 in project screen and line 72 in skill analyzer | `AIzaSyCpwrfw4KoMaCyuykTUT3Zcrh1KkeZ1ltg` |
 
 > ⚠️ **Security Note:**  
 > Do not expose your API keys in public repositories.  
@@ -158,17 +158,19 @@ This will allow the Flutter app to use your **Next.js local backend** instead of
 
 ## 🧰 Technologies Used
 
-| Category | Technologies |
-|-----------|---------------|
-| Frontend | Flutter, Dart |
-| Backend / API | Next.js, Supabase, Firebase |
-| Authentication | Firebase Auth |
-| Database | Firestore, Supabase Postgres |
-| Cloud & Hosting | Firebase Hosting, Google Cloud Run |
-| Storage | Firebase Storage |
-| Notifications | Firebase Cloud Messaging |
-| AI / ML | Gemini API, Firebase ML Kit |
-| Version Control | GitHub, GitHub Actions |
+| Category | Technologies                                |
+|-----------|---------------------------------------------|
+| Frontend | Flutter, Dart                               |
+| Backend / API | Next.js, Supabase, Firebase                 |
+| Authentication | Firebase Auth                               |
+| Database | Firestore, Supabase Postgres                |
+| Cloud & Hosting | Firebase Hosting, Google Cloud Run          |
+| Storage | Firebase Storage                            |
+| Notifications | Firebase Cloud Messaging                    |
+| AI / ML | Gemini API, Firebase ML Kit                 |
+| Version Control | GitHub, GitHub Actions                      |
+| API Keys | Adzuna, Gemini                              |
+|Deployment| Firebase Hosting, Google Cloud Run , Vercel |
 
 ---
 
