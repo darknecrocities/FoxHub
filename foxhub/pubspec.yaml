@@ -43,6 +43,8 @@ dependencies:
   fl_chart: ^0.69.0
   firebase_storage: ^11.7.7
   image_picker: ^1.1.1
+  file_picker: ^8.0.7
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -52,6 +54,7 @@ dependencies:
   flutter_markdown: ^0.7.7+1
   supabase_flutter: ^2.9.1
   intl: ^0.19.0
+  google_mlkit_text_recognition: ^0.15.0
 
 dev_dependencies:
   flutter_test:
@@ -83,9 +86,18 @@ flutter:
     - lib/assets/images/fox.png
     - lib/assets/images/app_logo.png
     - lib/data/roadmap-content/
+    - lib/assets/images/default_avatar.png
+    - lib/assets/images/default_banner.png
+    - lib/assets/images/
     - lib/data/search/
     - lib/assets/orgs/
-
+  fonts:
+    - family: PressStart2P
+      fonts:
+        - asset: lib/assets/fonts/PressStart2P-Regular.ttf
+    - family: CourierPrime
+      fonts:
+        - asset: lib/assets/fonts/CourierPrime.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -113,6 +125,6 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

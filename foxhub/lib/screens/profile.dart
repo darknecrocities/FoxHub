@@ -31,22 +31,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserProfile();
   }
 
+  // Load user profile with fallback to default images
   Future<void> _loadUserProfile() async {
-    final doc =
-    await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
-    if (doc.exists) {
-      final data = doc.data()!;
+    try {
+      final doc = await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          fullNameController.text = data["fullName"] ?? "";
+          bioController.text = data["bio"] ?? "";
+          linkedinController.text = data["linkedin"] ?? "";
+          githubController.text = data["github"] ?? "";
+
+          photoUrl = data["photoUrl"] ?? "lib/assets/images/default_avatar.png";
+          bannerUrl = data["bannerUrl"] ?? "lib/assets/images/default_banner.png";
+        });
+      } else {
+        setState(() {
+          photoUrl = "lib/assets/images/default_avatar.png";
+          bannerUrl = "lib/assets/images/default_banner.png";
+        });
+      }
+    } catch (e) {
       setState(() {
-        fullNameController.text = data["fullName"] ?? "";
-        bioController.text = data["bio"] ?? "";
-        linkedinController.text = data["linkedin"] ?? "";
-        githubController.text = data["github"] ?? "";
-        photoUrl = data["photoUrl"];
-        bannerUrl = data["bannerUrl"];
+        photoUrl = "lib/assets/images/default_avatar.png";
+        bannerUrl = "lib/assets/images/default_banner.png";
       });
+      print("Error fetching user data: $e");
     }
   }
 
+  // Upload profile or banner image
   Future<void> _pickAndUploadImage(bool isBanner) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -58,20 +73,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final file = File(pickedFile.path);
       final user = FirebaseAuth.instance.currentUser!;
 
-      // Use correct bucket path
       final ref = FirebaseStorage.instance
           .ref('users/${user.uid}/${isBanner ? "banner" : "profile"}.jpg');
 
-      // Upload the file
       final uploadTask = ref.putFile(file);
       final snapshot = await uploadTask.whenComplete(() {});
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      // Save URL immediately in Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         isBanner ? "bannerUrl" : "photoUrl": downloadUrl,
       }, SetOptions(merge: true));
 
@@ -91,8 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
-
+  // Save other profile data
   Future<void> _saveProfile() async {
     await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
       "fullName": fullNameController.text,
@@ -129,7 +137,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                       image: bannerUrl != null
                           ? DecorationImage(
-                        image: NetworkImage(bannerUrl!),
+                        image: bannerUrl!.startsWith("http")
+                            ? NetworkImage(bannerUrl!)
+                            : AssetImage(bannerUrl!) as ImageProvider,
                         fit: BoxFit.cover,
                       )
                           : null,
@@ -148,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : null,
                   ),
                 ),
-                // Floating Avatar
+                // 🔸 Floating Avatar
                 Positioned(
                   bottom: -60,
                   child: GestureDetector(
@@ -168,8 +178,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.white,
-                        backgroundImage:
-                        photoUrl != null ? NetworkImage(photoUrl!) : null,
+                        backgroundImage: photoUrl != null
+                            ? (photoUrl!.startsWith("http")
+                            ? NetworkImage(photoUrl!) as ImageProvider
+                            : AssetImage(photoUrl!))
+                            : const AssetImage("lib/assets/images/default_avatar.png"),
                         child: photoUrl == null
                             ? Icon(Icons.person, size: 60, color: orange)
                             : null,

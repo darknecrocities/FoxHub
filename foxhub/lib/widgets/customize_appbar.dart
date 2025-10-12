@@ -39,7 +39,15 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
               .doc(uid)
               .snapshots(),
           builder: (context, snapshot) {
-            final photoUrl = snapshot.data?.get('photoUrl');
+            if (snapshot.connectionState == ConnectionState.waiting ||
+                !snapshot.hasData ||
+                !snapshot.data!.exists) {
+              // 🔸 Show default avatar while loading or missing
+              return _defaultAvatar(context);
+            }
+
+            final data = snapshot.data!.data() as Map<String, dynamic>?;
+            final photoUrl = data?['photoUrl'];
 
             return GestureDetector(
               onTap: () {
@@ -53,9 +61,9 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: CircleAvatar(
                   radius: 18,
                   backgroundColor: Colors.white,
-                  backgroundImage: photoUrl != null
+                  backgroundImage: (photoUrl != null && photoUrl.toString().isNotEmpty)
                       ? NetworkImage(photoUrl)
-                      : const AssetImage("assets/default_avatar.png")
+                      : const AssetImage("lib/assets/images/default_avatar.png")
                   as ImageProvider,
                 ),
               ),
@@ -63,6 +71,25 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       ],
+    );
+  }
+
+  Widget _defaultAvatar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const ProfileScreen()),
+          );
+        },
+        child: const CircleAvatar(
+          radius: 18,
+          backgroundColor: Colors.white,
+          backgroundImage: AssetImage("lib/assets/images/default_avatar.png"),
+        ),
+      ),
     );
   }
 
@@ -93,12 +120,24 @@ Drawer buildAppDrawer(BuildContext context) {
                     .doc(FirebaseAuth.instance.currentUser?.uid)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  final photoUrl = snapshot.data?.get('photoUrl');
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData ||
+                      !snapshot.data!.exists) {
+                    return const CircleAvatar(
+                      radius: 28,
+                      backgroundImage:
+                      AssetImage("lib/assets/images/default_avatar.png"),
+                    );
+                  }
+
+                  final data = snapshot.data!.data() as Map<String, dynamic>?;
+                  final photoUrl = data?['photoUrl'];
+
                   return CircleAvatar(
                     radius: 28,
-                    backgroundImage: photoUrl != null
+                    backgroundImage: (photoUrl != null && photoUrl.toString().isNotEmpty)
                         ? NetworkImage(photoUrl)
-                        : const AssetImage("assets/default_avatar.png")
+                        : const AssetImage("lib/assets/images/default_avatar.png")
                     as ImageProvider,
                   );
                 },
@@ -114,7 +153,8 @@ Drawer buildAppDrawer(BuildContext context) {
         ListTile(
           leading: const Icon(Icons.logout, color: Colors.red),
           title: const Text("Logout"),
-          onTap: () {
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const LoginScreen()),

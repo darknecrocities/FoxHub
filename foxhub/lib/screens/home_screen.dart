@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:foxhub/screens/community/community.dart';
 import 'package:foxhub/screens/internship.dart';
 import 'package:foxhub/screens/organizations/organization.dart';
@@ -17,6 +16,7 @@ import 'package:foxhub/screens/search/search_service.dart';
 import 'community/fox_logo.dart';
 import 'community/feature_button.dart';
 import 'search/search_suggestion.dart';
+import 'skill_analyzer_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -198,9 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: "Internships",
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const InternshipScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const InternshipScreen()),
                   ),
                 ),
                 FeatureButton(
@@ -208,9 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: "Organizations",
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const OrganizationScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const OrganizationScreen()),
                   ),
                 ),
                 FeatureButton(
@@ -218,9 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: "Community Forums",
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const CommunityScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const CommunityScreen()),
                   ),
                 ),
                 FeatureButton(
@@ -231,8 +225,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     MaterialPageRoute(builder: (_) => const ProjectScreen()),
                   ),
                 ),
+                FeatureButton(
+                  icon: Icons.analytics,
+                  title: "Skill Analyzer",
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SkillAnalyzerScreen()),
+                  ),
+                ),
               ],
             ),
+
           ],
         ),
       ),
