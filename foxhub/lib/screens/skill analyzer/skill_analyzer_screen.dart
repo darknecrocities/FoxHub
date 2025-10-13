@@ -69,7 +69,7 @@ class _SkillAnalyzerScreenState extends State<SkillAnalyzerScreen>
     "Robotics Engineer": ["Robotics Design", "Sensors", "C++"],
   };
 
-  final String apiKey = 'YOUR_API_KEY';
+  final String apiKey = 'AIzaSyCpwrfw4KoMaCyuykTUT3Zcrh1KkeZ1ltg';
 
   late AnimationController _controller;
   late Animation<double> _pulseAnimation;

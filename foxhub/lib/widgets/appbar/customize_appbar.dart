@@ -3,14 +3,15 @@ import 'package:foxhub/screens/authentication/login_screen.dart';
 import 'package:foxhub/screens/profile/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomizeAppBar({super.key, required String title});
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final user = FirebaseAuth.instance.currentUser!;
+    final uid = user.uid;
 
     return AppBar(
       backgroundColor: Colors.orange.shade400,
@@ -31,23 +32,23 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
 
-      // 🔹 Profile Picture from Firestore
+      // 🔹 Profile Picture from Supabase
       actions: [
-        StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(uid)
-              .snapshots(),
+        FutureBuilder(
+          future: Supabase.instance.client
+              .from('users')
+              .select('photo_url')
+              .eq('id', uid) // ✅ non-null
+              .maybeSingle(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting ||
                 !snapshot.hasData ||
-                !snapshot.data!.exists) {
-              // 🔸 Show default avatar while loading or missing
+                snapshot.data == null) {
               return _defaultAvatar(context);
             }
 
-            final data = snapshot.data!.data() as Map<String, dynamic>?;
-            final photoUrl = data?['photoUrl'];
+            final data = snapshot.data as Map<String, dynamic>?;
+            final photoUrl = data?['photo_url'] as String?;
 
             return GestureDetector(
               onTap: () {
@@ -61,9 +62,9 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: CircleAvatar(
                   radius: 18,
                   backgroundColor: Colors.white,
-                  backgroundImage: (photoUrl != null && photoUrl.toString().isNotEmpty)
+                  backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
                       ? NetworkImage(photoUrl)
-                      : const AssetImage("lib/assets/images/default_avatar.png")
+                      : const AssetImage("")
                   as ImageProvider,
                 ),
               ),
@@ -87,7 +88,7 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: const CircleAvatar(
           radius: 18,
           backgroundColor: Colors.white,
-          backgroundImage: AssetImage("lib/assets/images/default_avatar.png"),
+          backgroundImage: AssetImage(""),
         ),
       ),
     );
@@ -99,6 +100,9 @@ class CustomizeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 // Drawer
 Drawer buildAppDrawer(BuildContext context) {
+  final user = FirebaseAuth.instance.currentUser!;
+  final uid = user.uid;
+
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -113,16 +117,17 @@ Drawer buildAppDrawer(BuildContext context) {
           ),
           child: Row(
             children: [
-              // 🔹 Profile pic in Drawer too
-              StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                    .snapshots(),
+              // 🔹 Profile pic in Drawer (Supabase)
+              FutureBuilder(
+                future: Supabase.instance.client
+                    .from('users')
+                    .select('photo_url')
+                    .eq('id', uid)
+                    .maybeSingle(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting ||
                       !snapshot.hasData ||
-                      !snapshot.data!.exists) {
+                      snapshot.data == null) {
                     return const CircleAvatar(
                       radius: 28,
                       backgroundImage:
@@ -130,15 +135,24 @@ Drawer buildAppDrawer(BuildContext context) {
                     );
                   }
 
-                  final data = snapshot.data!.data() as Map<String, dynamic>?;
-                  final photoUrl = data?['photoUrl'];
+                  final data = snapshot.data as Map<String, dynamic>?;
+                  final photoUrl = data?['photo_url'] as String?;
 
-                  return CircleAvatar(
-                    radius: 28,
-                    backgroundImage: (photoUrl != null && photoUrl.toString().isNotEmpty)
-                        ? NetworkImage(photoUrl)
-                        : const AssetImage("lib/assets/images/default_avatar.png")
-                    as ImageProvider,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
+                          ? NetworkImage(photoUrl)
+                          : const AssetImage(
+                        "",
+                      ) as ImageProvider,
+                    ),
                   );
                 },
               ),

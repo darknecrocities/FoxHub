@@ -19,7 +19,7 @@ class ProjectScreen extends StatefulWidget {
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
-  final String apiKey = "YOUR_API_KEY";
+  final String apiKey = "AIzaSyCpwrfw4KoMaCyuykTUT3Zcrh1KkeZ1ltg";
   String? selectedCareer;
   String? selectedLevel = "Beginner"; // default selection
   bool loading = false;

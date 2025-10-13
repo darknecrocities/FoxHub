@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../widgets/appbar/customize_appbar.dart';
 import '../../widgets/navbar/customize_navbar.dart';
 
@@ -31,38 +31,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserProfile();
   }
 
-  // Load user profile with fallback to default images
+  // Load user profile
   Future<void> _loadUserProfile() async {
     try {
-      final doc = await FirebaseFirestore.instance.collection("users").doc(user.uid).get();
-      if (doc.exists) {
-        final data = doc.data()!;
-        setState(() {
-          fullNameController.text = data["fullName"] ?? "";
-          bioController.text = data["bio"] ?? "";
-          linkedinController.text = data["linkedin"] ?? "";
-          githubController.text = data["github"] ?? "";
+      final res = await Supabase.instance.client
+          .from('users')
+          .select()
+          .eq('id', user.uid)
+          .single();
 
-          photoUrl = data["photoUrl"] ?? "lib/assets/images/default_avatar.png";
-          bannerUrl = data["bannerUrl"] ?? "lib/assets/images/default_banner.png";
-        });
-      } else {
+      final data = res as Map<String, dynamic>?;
+
+      if (data != null) {
         setState(() {
-          photoUrl = "lib/assets/images/default_avatar.png";
-          bannerUrl = "lib/assets/images/default_banner.png";
+          fullNameController.text = data['full_name'] ?? '';
+          bioController.text = data['bio'] ?? '';
+          linkedinController.text = data['linkedin'] ?? '';
+          githubController.text = data['github'] ?? '';
+          photoUrl = data['photo_url'];
+          bannerUrl = data['banner_url'];
         });
       }
     } catch (e) {
-      setState(() {
-        photoUrl = "lib/assets/images/default_avatar.png";
-        bannerUrl = "lib/assets/images/default_banner.png";
-      });
-      print("Error fetching user data: $e");
+      print("Error fetching user data from Supabase: $e");
     }
   }
 
-  // Upload profile or banner image
-  Future<void> _pickAndUploadImage(bool isBanner) async {
+
+  // Pick and upload image to Supabase Storage
+  Future<void> _pickAndUploadImage({required bool isBanner}) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
@@ -71,48 +68,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final file = File(pickedFile.path);
-      final user = FirebaseAuth.instance.currentUser!;
+      final fileExt = pickedFile.path.split('.').last;
+      final fileName = isBanner ? 'banner.$fileExt' : 'profile.$fileExt';
 
-      final ref = FirebaseStorage.instance
-          .ref('users/${user.uid}/${isBanner ? "banner" : "profile"}.jpg');
+      // Supabase Storage
+      final bucket = Supabase.instance.client.storage.from('profile');
+      final path = '${user.uid}/$fileName';
 
-      final uploadTask = ref.putFile(file);
-      final snapshot = await uploadTask.whenComplete(() {});
-      final downloadUrl = await snapshot.ref.getDownloadURL();
+      // Upload the image (no response object in current supabase_flutter)
+      await bucket.upload(path, file, fileOptions: const FileOptions(upsert: true));
 
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        isBanner ? "bannerUrl" : "photoUrl": downloadUrl,
-      }, SetOptions(merge: true));
+      // Get public URL (returns String)
+      final urlRes = bucket.getPublicUrl(path);
 
+      // Update local state to show image immediately
       setState(() {
         if (isBanner) {
-          bannerUrl = downloadUrl;
+          bannerUrl = urlRes;
         } else {
-          photoUrl = downloadUrl;
+          photoUrl = urlRes;
         }
-        loading = false;
       });
+
+      // Upsert to Supabase table
+      final updateData = {
+        'id': user.uid,
+        'email': user.email,
+        'full_name': fullNameController.text,
+        'bio': bioController.text,
+        'linkedin': linkedinController.text,
+        'github': githubController.text,
+        ...{isBanner ? 'banner_url' : 'photo_url': urlRes},
+      };
+
+
+      await Supabase.instance.client
+          .from('users')
+          .upsert(updateData, onConflict: 'id'); // onConflict expects String
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(isBanner ? "Banner updated!" : "Profile picture updated!")),
+      );
     } catch (e) {
-      setState(() => loading = false);
       print("Upload failed: $e");
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Failed to upload image: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to upload image: $e")),
+      );
+    } finally {
+      setState(() => loading = false);
     }
   }
 
-  // Save other profile data
-  Future<void> _saveProfile() async {
-    await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
-      "fullName": fullNameController.text,
-      "bio": bioController.text,
-      "linkedin": linkedinController.text,
-      "github": githubController.text,
-      "photoUrl": photoUrl,
-      "bannerUrl": bannerUrl,
-    }, SetOptions(merge: true));
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Profile Updated!")));
+
+
+  // Save other profile data (full name, bio, links)
+  Future<void> _saveProfile() async {
+    setState(() => loading = true);
+
+    try {
+      await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
+        "fullName": fullNameController.text,
+        "bio": bioController.text,
+        "linkedin": linkedinController.text,
+        "github": githubController.text,
+        "photoUrl": photoUrl,
+        "bannerUrl": bannerUrl,
+      }, SetOptions(merge: true));
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Profile Updated!")));
+    } catch (e) {
+      print("Profile save failed: $e");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Failed to save profile: $e")));
+    } finally {
+      setState(() => loading = false);
+    }
   }
 
   @override
@@ -125,13 +157,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🔹 Banner + Profile Avatar
+            // Banner image
+            // Banner + Profile Picture (floating)
             Stack(
               clipBehavior: Clip.none,
-              alignment: Alignment.center,
               children: [
+                // Banner
                 GestureDetector(
-                  onTap: () => _pickAndUploadImage(true),
+                  onTap: () => _pickAndUploadImage(isBanner: true),
                   child: Container(
                     height: 200,
                     width: double.infinity,
@@ -159,123 +192,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         : null,
                   ),
                 ),
-                // 🔸 Floating Avatar
+                // Profile Picture (floating)
                 Positioned(
-                  bottom: -60,
-                  child: GestureDetector(
-                    onTap: () => _pickAndUploadImage(false),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 12,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
+                  bottom: -60, // half of CircleAvatar radius to overlap
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () => _pickAndUploadImage(isBanner: false),
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.white,
                         backgroundImage: photoUrl != null
                             ? (photoUrl!.startsWith("http")
-                            ? NetworkImage(photoUrl!) as ImageProvider
-                            : AssetImage(photoUrl!))
-                            : const AssetImage("lib/assets/images/default_avatar.png"),
-                        child: photoUrl == null
-                            ? Icon(Icons.person, size: 60, color: orange)
-                            : null,
+                            ? NetworkImage(photoUrl!)
+                            : AssetImage(photoUrl!)) as ImageProvider
+                            : const AssetImage(""),
                       ),
                     ),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 80), // leave space for floating avatar
 
-            const SizedBox(height: 80),
+            const SizedBox(height: 20),
 
-            // 🔹 Profile Form with Card Style
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    _buildTextField(
-                      controller: fullNameController,
-                      label: "Full Name",
-                      icon: Icons.person,
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        prefixIcon: const Icon(Icons.email),
-                        filled: true,
-                        fillColor: Colors.grey.shade100,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      controller: TextEditingController(text: user.email),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTextField(
-                      controller: bioController,
-                      label: "Bio",
-                      icon: Icons.info,
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTextField(
-                      controller: linkedinController,
-                      label: "LinkedIn URL",
-                      icon: Icons.business_center,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildTextField(
-                      controller: githubController,
-                      label: "GitHub URL",
-                      icon: Icons.code,
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: loading ? null : _saveProfile,
-                      icon: const Icon(Icons.save),
-                      label: const Text("Save Profile"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: orange,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 15,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 4,
-                        shadowColor: orange.withOpacity(0.4),
+              child: Column(
+                children: [
+                  _buildTextField(controller: fullNameController, label: "Full Name", icon: Icons.person),
+                  const SizedBox(height: 12),
+                  TextField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      prefixIcon: const Icon(Icons.email),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    if (loading) const SizedBox(height: 12),
-                    if (loading)
-                      const CircularProgressIndicator(color: Colors.orangeAccent),
-                  ],
-                ),
+                    controller: TextEditingController(text: user.email),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildTextField(controller: bioController, label: "Bio", icon: Icons.info, maxLines: 3),
+                  const SizedBox(height: 12),
+                  _buildTextField(controller: linkedinController, label: "LinkedIn URL", icon: Icons.business_center),
+                  const SizedBox(height: 12),
+                  _buildTextField(controller: githubController, label: "GitHub URL", icon: Icons.code),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: loading ? null : _saveProfile,
+                    icon: const Icon(Icons.save),
+                    label: const Text("Save Profile"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: orange,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  if (loading) const SizedBox(height: 12),
+                  if (loading) const CircularProgressIndicator(color: Colors.orangeAccent),
+                ],
               ),
             ),
           ],
@@ -301,10 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         labelText: label,
         prefixIcon: Icon(icon, color: orange),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: orange, width: 2),
-        ),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: orange, width: 2)),
       ),
     );
   }
