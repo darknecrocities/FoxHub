@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login_screen.dart';
 import 'signup_helpers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -25,7 +26,7 @@ class SignUpForm extends StatelessWidget {
     required this.courses,
     required this.selectedCourse,
     required this.onCourseChanged,
-    required this.onRegister,
+    required this.onRegister, // add this
   });
 
   @override
@@ -62,12 +63,22 @@ class SignUpForm extends StatelessWidget {
             _input(email, 'Email', Icons.email_outlined, validateEmail,
                 keyboardType: TextInputType.emailAddress),
             const SizedBox(height: 18),
-            _input(pass, 'Password', Icons.lock_outline, validatePassword,
-                obscureText: true),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _input(pass, 'Password', Icons.lock_outline, validatePassword,
+                    obscureText: true),
+                const SizedBox(height: 6),
+                const Text(
+                  'Password must be at least 8 characters, include uppercase, lowercase, and a number',
+                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                ),
+              ],
+            ),
             const SizedBox(height: 22),
             _courseDropdown(orange),
             const SizedBox(height: 30),
-            _registerButton(orange),
+            _registerButton(context, orange),
             const SizedBox(height: 15),
             _loginRedirect(context, orange),
           ],
@@ -87,7 +98,8 @@ class SignUpForm extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: Colors.grey),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+        contentPadding:
+        const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -130,10 +142,10 @@ class SignUpForm extends StatelessWidget {
     onChanged: (val) => onCourseChanged(val!),
   );
 
-  Widget _registerButton(Color orange) => SizedBox(
+  Widget _registerButton(BuildContext context, Color orange) => SizedBox(
     width: double.infinity,
     child: ElevatedButton(
-      onPressed: onRegister,
+      onPressed: onRegister, // simply call the callback
       style: ElevatedButton.styleFrom(
         backgroundColor: orange,
         padding: const EdgeInsets.symmetric(vertical: 18),
@@ -145,10 +157,13 @@ class SignUpForm extends StatelessWidget {
       ),
       child: const Text(
         'Register',
-        style: TextStyle(fontSize: 18, color: Colors.white ,fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
       ),
     ),
   );
+
+
 
   Widget _loginRedirect(BuildContext context, Color orange) => Row(
     mainAxisAlignment: MainAxisAlignment.center,

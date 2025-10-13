@@ -43,31 +43,86 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _register() async {
-    if (_formKey.currentState!.validate()) {
-      final user = UserModel(
-        uid: '',
-        fullName: _fullname.text.trim(),
-        username: _username.text.trim(),
-        email: _email.text.trim(),
-        course: _selectedCourse,
-        number: _number.text.trim(),
+    if (!_formKey.currentState!.validate()) return;
+
+    // Extra password validation
+    final passError = validatePassword(_pass.text.trim());
+    if (passError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(passError)));
+      return;
+    }
+
+    final user = UserModel(
+      uid: '',
+      fullName: _fullname.text.trim(),
+      username: _username.text.trim(),
+      email: _email.text.trim(),
+      course: _selectedCourse,
+      number: _number.text.trim(),
+    );
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.register(user, _pass.text.trim());
+
+    if (!mounted) return;
+
+    if (success) {
+      // Show animated success dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 500),
+            tween: Tween(begin: 0.0, end: 1.0),
+            builder: (context, value, child) {
+              return Transform.scale(
+                scale: value,
+                child: Opacity(opacity: value, child: child),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.orangeAccent.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6)),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.check_circle, color: Colors.green, size: 60),
+                  SizedBox(height: 12),
+                  Text(
+                    'Registration Successful!',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       );
 
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.register(user, _pass.text.trim());
-
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(success
-            ? 'Registration successful! Please login.'
-            : 'Registration failed. Try again.'),
-      ));
-      if (success) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-        );
-      }
+      await Future.delayed(const Duration(milliseconds: 1200));
+      Navigator.of(context).pop(); // close dialog
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration failed. Try again.')),
+      );
     }
   }
 
@@ -106,9 +161,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     pass: _pass,
                     courses: _courses,
                     selectedCourse: _selectedCourse,
-                    onCourseChanged: (val) =>
-                        setState(() => _selectedCourse = val),
-                    onRegister: _register,
+                    onCourseChanged: (val) => setState(() => _selectedCourse = val),
+                    onRegister: _register, // callback passed to child
                   ),
                 ],
               ),

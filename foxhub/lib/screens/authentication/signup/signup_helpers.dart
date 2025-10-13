@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Background decorations for SignUp/Login screens
 Widget buildBackgroundDecorations(Color orange) => Stack(
   children: [
     Positioned(
@@ -21,15 +22,25 @@ Widget _decorCircle(Color color, double size) => Container(
   decoration: BoxDecoration(color: color, shape: BoxShape.circle),
 );
 
-// Validation helpers
+/// Validation Helpers
+
+/// Checks if a field is not empty
 String? validateNotEmpty(String? val, String field) =>
     (val == null || val.trim().isEmpty) ? '$field is required' : null;
 
+/// Validates email format
 String? validateEmail(String? val) {
   if (val == null || val.trim().isEmpty) return 'Email is required';
   final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
   return !emailRegex.hasMatch(val) ? 'Enter a valid email' : null;
 }
 
-String? validatePassword(String? val) =>
-    (val == null || val.length < 6) ? 'Password must be at least 6 characters' : null;
+/// Validates strong password
+String? validatePassword(String? val) {
+  if (val == null || val.isEmpty) return 'Password cannot be empty';
+  if (val.length < 8) return 'Password must be at least 8 characters';
+  if (!RegExp(r'[A-Z]').hasMatch(val)) return 'Password must include an uppercase letter';
+  if (!RegExp(r'[a-z]').hasMatch(val)) return 'Password must include a lowercase letter';
+  if (!RegExp(r'[0-9]').hasMatch(val)) return 'Password must include a number';
+  return null; // password is valid
+}
